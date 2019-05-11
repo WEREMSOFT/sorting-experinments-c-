@@ -1,12 +1,16 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include "core/game.hpp"
+#include "game/game.hpp"
 
+#define OBBJECT_COUNT 5
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(800, 600), "DOD Game");
 
-    Game game(window);
+    Game::Struct game(window);
+    Game::utils::createRecursiveHierarchy(game.gameObjects.back(), OBBJECT_COUNT);
+    Game::utils::createRecursiveHierarchy(game.gameObjects[0], OBBJECT_COUNT);
+
 
     // run the program as long as the window is open
     while (window.isOpen())
@@ -24,7 +28,9 @@ int main() {
             }
         }
 
-        game.update();
+
+
+        Game::utils::update(game);
     }
 
     return 0;
