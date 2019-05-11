@@ -5,14 +5,16 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-struct GameObject: sf::Sprite {
+struct GameObject{
     std::vector<GameObject> children;
     sf::RenderStates states;
+    const sf::Texture* texture;
+    sf::Transform transform;
 
-    explicit GameObject(const sf::Texture& texture);
+    GameObject(){}
 
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates pStates);
-
-    void addChild(sf::Texture& texture);
+    GameObject(const sf::Texture* pTexture) {
+        texture = pTexture;
+    }
 
 };
