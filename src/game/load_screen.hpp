@@ -38,6 +38,13 @@ namespace LoadScreen {
         Struct(Context &context) : context(context) {
 
         }
+
+        ~Struct(){
+            printf("Destroying loading screen\n");
+        }
+
+        Struct(const Struct& other) = delete;
+        Struct(const Struct&& other) = delete;
     };
 
     namespace utils {
@@ -115,7 +122,7 @@ namespace LoadScreen {
                         loadScreen.threads[i].join();
                 }
                 loadScreen.finshed = true;
-                printf("All loading threads joined");
+                printf("All loading threads joined\n");
             }
         }
 
