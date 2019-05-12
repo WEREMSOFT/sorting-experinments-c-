@@ -6,7 +6,7 @@
 
 
 #include <SFML/Graphics.hpp>
-#include "game_object.hpp"
+#include "../entities/game_object.hpp"
 
 namespace FPSCounter {
 

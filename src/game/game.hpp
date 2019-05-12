@@ -7,34 +7,30 @@
 
 #include <SFML/Graphics.hpp>
 #include "../core/entities/game_object.hpp"
-#include "../core/entities/fps_counter.hpp"
+#include "../core/debug/fps_counter.hpp"
+#include "../context.hpp"
 
 #define ANGLE 45
 
 namespace Game{
     struct Struct {
-        sf::Texture texture;
-        sf::Font font;
+        Context& context;
         std::vector<GameObject::Struct> gameObjects;
         sf::Sprite sprite;
         FPSCounter::Struct fpsCounter;
-        unsigned int steps = 0;
         sf::Clock clock;
         sf::RenderWindow &window;
 
-        Struct(sf::RenderWindow &pWindow) : window(pWindow) {
+        Struct(Context& context) : context(context), window(*context.window) {
             gameObjects.reserve(2);
             clock.restart();
 
-            font.loadFromFile("assets/fonts/PressStart2P-Regular.ttf");
-            texture.loadFromFile("assets/pattern_background.png");
+            fpsCounter.font = &context.fontHolder->get(Fonts::PRESS_START);
 
-            fpsCounter.font = &font;
-
-            gameObjects.emplace_back(&texture);
+            gameObjects.emplace_back(&context.textureHolder->get(Textures::TITLE_BACKGROUND_TILE));
             gameObjects.back().transform.translate(200, 300);
 
-            gameObjects.emplace_back(&texture);
+            gameObjects.emplace_back(&context.textureHolder->get(Textures::TITLE_BACKGROUND_TILE));
             gameObjects.back().transform.translate(600, 300);
 
             FPSCounter::utils::initialize(fpsCounter);
