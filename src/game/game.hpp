@@ -29,13 +29,13 @@ namespace Game{
         sf::RenderWindow &window;
 
         Struct(Context& context) : context(context), window(*context.window) {
-            gameObjects.reserve(2);
+            gameObjects.reserve(3);
             clock.restart();
 
             Cat::utils::initializeAnimations(cat, context);
 
             cat.transform.translate(100, 100);
-
+            gameObjects.emplace_back(cat);
 
             fpsCounter.font = &context.fontHolder->get(Fonts::PRESS_START);
 
@@ -60,7 +60,7 @@ namespace Game{
         void update(Struct& game) {
             auto dt = game.clock.restart().asSeconds();
             GameObject::utils::rotate(game.gameObjects, game.gameObjects.begin(), ANGLE, dt);
-            Animation::utils::processAnimationFrame(game.cat.animations[game.cat.currentAnimation], dt);
+            Animation::utils::processAnimationFrame(game.cat.animations[game.cat.currentAnimation], dt, game.cat);
         }
 
         void createRecursiveHierarchy(GameObject::Struct &go, int ammount, int direction = 1) {
@@ -77,7 +77,7 @@ namespace Game{
 
             GameObject::utils::draw(game.gameObjects, game.gameObjects.begin(), game.window, sf::RenderStates::Default, game.sprite);
             FPSCounter::utils::recalculateFPS(game.fpsCounter);
-            game.window.draw(game.cat.animations[game.cat.currentAnimation].sprite);
+//            game.window.draw(game.cat.animations[game.cat.currentAnimation].sprite);
             FPSCounter::utils::draw(game.fpsCounter, game.window);
 
             game.window.display();

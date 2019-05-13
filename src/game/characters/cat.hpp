@@ -32,12 +32,11 @@ namespace Cat {
 
     namespace utils {
         void initializeAnimations(Struct& cat, Context& context){
-            cat.animations[CatAnimations::ANIM_IDLE].sprite.setTexture(context.textureHolder->get(Textures::CAT_1_ANIMATION));
-            cat.animations[CatAnimations::ANIM_IDLE].sprite.setTexture(context.textureHolder->get(Textures::CAT_1_ANIMATION));
+            cat.texture = &context.textureHolder->get(Textures::CAT_1_ANIMATION);
+//            cat.animations[CatAnimations::ANIM_IDLE].texture = &context.textureHolder->get(Textures::CAT_1_ANIMATION);
             cat.animations[CatAnimations::ANIM_IDLE].maxFrames = 5;
             cat.animations[CatAnimations::ANIM_IDLE].frameSize =  {0, 26, 135, 154};
             cat.animations[CatAnimations::ANIM_IDLE].framesPerSeccond = 10;
-            Animation::utils::setCentered(cat.animations[CatAnimations::ANIM_IDLE], true);
             Animation::utils::playAnimation(cat.animations[CatAnimations::ANIM_IDLE]);
         }
 

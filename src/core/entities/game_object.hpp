@@ -11,11 +11,16 @@ namespace GameObject {
         sf::RenderStates states;
         const sf::Texture* texture;
         sf::Transform transform;
+        sf::IntRect textureRect;
 
         Struct(){}
 
         Struct(const sf::Texture* pTexture) {
             texture = pTexture;
+            textureRect.top = 0;
+            textureRect.left = 0;
+            textureRect.width = texture->getSize().x;
+            textureRect.height = texture->getSize().y;
         }
 
     };
@@ -39,6 +44,7 @@ namespace GameObject {
             if(gos.end() == current) return;
 
             sprite.setTexture(*current->texture, true);
+            sprite.setTextureRect(current->textureRect);
             target.draw(sprite, states.transform * current->transform);
 
             if(!current->children.empty()) {
@@ -48,6 +54,14 @@ namespace GameObject {
             }
 
             draw(gos, ++current, target, states, sprite);
+        }
+
+        void setTextureAndTextureRect(GameObject::Struct& go,const sf::Texture* pTexture) {
+            go.texture = pTexture;
+            go.textureRect.top = 0;
+            go.textureRect.left = 0;
+            go.textureRect.width = go.texture->getSize().x;
+            go.textureRect.height = go.texture->getSize().y;
         }
     }
 

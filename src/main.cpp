@@ -3,6 +3,7 @@
 #include "game/game.hpp"
 #include "context.hpp"
 #include "game/load_screen.hpp"
+#include "game/tables.hpp"
 
 #define OBBJECT_COUNT 5
 
@@ -11,7 +12,9 @@ int main() {
 
     TextureHolder textureHolder;
     FontHolder fontHolder;
-
+    Tables tables;
+    printf("Space in memory %d", sizeof(tables));
+    Entity entities[3];
 
     Context context(window, textureHolder, fontHolder);
 
