@@ -16,7 +16,7 @@ int main() {
     printf("Space in memory %lu\n", sizeof(tables));
 
     Context context(window, textureHolder, fontHolder);
-
+    // At the end of this scope, the loading screen will be removed from the stack.
     {
         LoadScreen::Struct loadScreen(context);
         LoadScreen::utils::loadResources(loadScreen);
@@ -34,7 +34,7 @@ int main() {
     utilsFunctions::setParent(tables, Entities::CAT, Entities::TILE);
 
 
-
+    // This is a scope, All objects created inside will be destroyed on the closing bracket.
     {
         sf::Clock clock;
         clock.restart();
