@@ -89,8 +89,35 @@ namespace utilsFunctions {
             sprite.setTexture(context.textureHolder->get(tables.textureID[i]), true);
             window.draw(sprite, tables.worldTransform[i]);
         }
+    }
 
+    void drawN(Tables& tables, Context& context, int start, int end){
+        sf::RenderWindow& window = *context.window;
+        sf::Sprite sprite;
+        for(int i = start; i < end; i++){
 
+            if(tables.flags[i] & Flags::DIRTY){
+                recalculateWorldTransform(tables, i);
+            }
+
+            sprite.setTexture(context.textureHolder->get(tables.textureID[i]), true);
+            window.draw(sprite, tables.worldTransform[i]);
+        }
+    }
+
+    unsigned int PRNG(int max)
+    {
+        // our initial starting seed is 5323
+        static unsigned int seed = 5323;
+
+        // Take the current seed and generate a new value from it
+        // Due to our use of large constants and overflow, it would be
+        // hard for someone to casually predict what the next number is
+        // going to be from the previous one.
+        seed = 8253729 * seed + 2396403;
+
+        // Take the seed and return a value between 0 and 32767
+        return seed  % 32768 % max;
     }
 };
 
