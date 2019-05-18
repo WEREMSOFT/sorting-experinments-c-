@@ -4,9 +4,7 @@
 
 #pragma once
 
-
 #include <SFML/Graphics.hpp>
-#include "../entities/game_object.hpp"
 
 namespace FPSCounter {
 

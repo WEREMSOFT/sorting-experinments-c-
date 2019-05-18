@@ -5,6 +5,7 @@
 #pragma once
 
 #include <thread>
+#include <mutex>
 #include <SFML/Graphics.hpp>
 #include "resource_definitions.hpp"
 #include "../core/utils.hpp"

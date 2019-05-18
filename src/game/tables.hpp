@@ -12,6 +12,12 @@ enum Entities {
     HOUSE,
     CAT,
     TILE,
+    TILE1,
+    TILE2,
+    TILE3,
+    TILE4,
+    TILE5,
+    TILE6,
     ENTITIES_COUNT
 };
 
