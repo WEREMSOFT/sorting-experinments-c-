@@ -6,7 +6,7 @@
 #include <SFML/Graphics.hpp>
 #include "resource_definitions.hpp"
 #define MAX_ENTITIES 10000
-#define HALF_MAX 5000
+#define HALF_MAX 0
 
 enum Entities {
     BACKGROUND,
