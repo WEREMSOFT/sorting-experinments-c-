@@ -5,30 +5,35 @@
 #include "game/tables.hpp"
 #include "core/debug/fps_counter.hpp"
 #include <functional>
+#include <mutex>
 
 #define SCREEN_WITH 800
 #define SCREEN_HEIGHT 600
 #define FRAME_DELAY 0.016 // Millisecconds
 
-
-void rotateAll(Tables &tables, sf::RenderWindow &window) {
-    sf::Clock clock;
-    while (window.isOpen()) {
-        float dt = clock.restart().asSeconds();
-
-        for (int i = MAX_ENTITIES / 2; i < MAX_ENTITIES; i++) {
-                utilsFunctions::rotate(tables, i, 45 * dt);
+namespace threads {
+    void rotateAll(Tables &tables, sf::RenderWindow &window) {
+        sf::Clock clock;
+        std::mutex lockScopeHandler;
+        while (window.isOpen()) {
+            float dt = clock.restart().asSeconds();
+            lockScopeHandler.lock();
+            for (int i = 0; i < MAX_ENTITIES; i++) {
+                    utilsFunctions::rotate(tables, i, 45 * dt);
+            }
+            lockScopeHandler.unlock();
         }
     }
-}
 
-void recalculateTransforms(Tables& tables, sf::RenderWindow &window){
-    sf::Clock clock;
-    while (window.isOpen()) {
-        float dt = clock.restart().asSeconds();
-        for (int i = 0; i < MAX_ENTITIES; i++) {
-            if (tables.flags[i] & Flags::DIRTY) {
-                utilsFunctions::recalculateWorldTransform(tables, i);
+    void recalculateTransforms(Tables& tables, sf::RenderWindow &window){
+        sf::Clock clock;
+
+        while (window.isOpen()) {
+            float dt = clock.restart().asSeconds();
+            for (int i = 0; i < MAX_ENTITIES; i++) {
+                if (tables.flags[i] & Flags::DIRTY) {
+                    utilsFunctions::recalculateWorldTransform(tables, i);
+                }
             }
         }
     }
@@ -62,22 +67,25 @@ int main() {
     {
         sf::Vector2f moveVector(32, 32);
 
-        utilsFunctions::centerOnScreen(tables, MAX_ENTITIES / 2, window);
+        utilsFunctions::centerOnScreen(tables, 0, window);
 
-        for(int i = MAX_ENTITIES / 2 + 1; i < MAX_ENTITIES; i++){
+        for(int i = 1; i < MAX_ENTITIES; i++){
             utilsFunctions::move(tables, i, moveVector);
         }
     }
 
-    for(int i = 0; i < MAX_ENTITIES / 2; i ++){
-        utilsFunctions::move(tables, i, sf::Vector2f(utilsFunctions::PRNG(window.getSize().x), utilsFunctions::PRNG(window.getSize().y)));
-    }
+//    for(int i = 0; i < MAX_ENTITIES / 2; i ++){
+//        utilsFunctions::move(tables, i, sf::Vector2f(utilsFunctions::PRNG(window.getSize().x), utilsFunctions::PRNG(window.getSize().y)));
+//    }
 
 
     // set parent child for all
     {
-        for(int i = MAX_ENTITIES / 2; i < MAX_ENTITIES - 1; i++){
-            utilsFunctions::setChild(tables, i + 1, i);
+        for(int i = 0; i < MAX_ENTITIES; i += 10){
+            utilsFunctions::move(tables, i, sf::Vector2f(i / 20, 100));
+            for(int j=i; j < i + 9; j++){
+                utilsFunctions::setChild(tables, j + 1, j);
+            }
         }
     }
 
@@ -90,8 +98,8 @@ int main() {
 
         FPSCounter::utils::initialize(fpsCounter);
 
-        std::thread myUpdate(rotateAll, std::ref(tables), std::ref(window));
-        std::thread myRecalculateTransforms(recalculateTransforms, std::ref(tables), std::ref(window));
+        std::thread myUpdate(threads::rotateAll, std::ref(tables), std::ref(window));
+        std::thread myRecalculateTransforms(threads::recalculateTransforms, std::ref(tables), std::ref(window));
 
         while (window.isOpen()) {
             float dt = clock.restart().asSeconds();
@@ -116,6 +124,8 @@ int main() {
             }
 
         }
+
+        // release the threads
         if (myUpdate.joinable()) myUpdate.join();
         if (myRecalculateTransforms.joinable()) myRecalculateTransforms.join();
     }
