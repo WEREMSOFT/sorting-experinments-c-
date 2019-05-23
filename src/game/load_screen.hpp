@@ -57,16 +57,16 @@ namespace LoadScreen {
             loadScreen.loadingText.setFont(loadScreen.context.fontHolder->get(Fonts::PRESS_START));
             loadScreen.loadingText.setString("Loading Resources");
             utilsFunctions::centerOrigin(loadScreen.loadingText);
-            utilsFunctions::centerOnScreen(loadScreen.loadingText, *loadScreen.context.window);
+            utilsFunctions::centerTextOnScreen(loadScreen.loadingText, *loadScreen.context.window);
 
             loadScreen.pressSpaceText.setFont(loadScreen.context.fontHolder->get(Fonts::PRESS_START));
             loadScreen.pressSpaceText.setString("Press Space to continue");
             utilsFunctions::centerOrigin(loadScreen.pressSpaceText);
-            utilsFunctions::centerOnScreen(loadScreen.pressSpaceText, *loadScreen.context.window);
+            utilsFunctions::centerTextOnScreen(loadScreen.pressSpaceText, *loadScreen.context.window);
             loadScreen.pressSpaceText.move(0.f, 150.f);
 
             loadScreen.progressBarBackgroud.setFillColor(sf::Color::White);
-            loadScreen.progressBarBackgroud.setSize(sf::Vector2f(loadScreen.context.window->getSize().x - 20, 40.f));
+            loadScreen.progressBarBackgroud.setSize(sf::Vector2f(loadScreen.context.window->getView().getSize().x - 20, 40.f));
             loadScreen.progressBarBackgroud.setPosition(15, loadScreen.loadingText.getPosition().y + 40);
 
             loadScreen.progressBar.setFillColor(sf::Color::Red);
@@ -111,8 +111,8 @@ namespace LoadScreen {
 
         void update(LoadScreen::Struct &loadScreen) {
             loadScreen.percentajeLoaded = (float) loadScreen.resourceConunter / (float) Textures::TEXTURE_COUNT;
-            auto substraction = loadScreen.context.window->getSize().x * loadScreen.percentajeLoaded + 30;
-            loadScreen.progressBar.setSize(sf::Vector2f(loadScreen.context.window->getSize().x - substraction, 30));
+            auto substraction = loadScreen.context.window->getView().getSize().x * loadScreen.percentajeLoaded + 30;
+            loadScreen.progressBar.setSize(sf::Vector2f(loadScreen.context.window->getView().getSize().x - substraction, 30));
 
             if (loadScreen.resourceConunter != 0) {
                 loadScreen.percentajeLoaded =

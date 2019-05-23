@@ -5,7 +5,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "resource_definitions.hpp"
-#define MAX_ENTITIES 10000
+#define MAX_ENTITIES 50000
 #define HALF_MAX 0
 
 enum Entities {
@@ -23,15 +23,15 @@ enum Entities {
 };
 
 enum Flags{
-    NONE = 0,
     DIRTY = 1,
-    HAS_CHILDS = 1 << 2,
 };
 
 
 struct Tables {
-    unsigned int flags[MAX_ENTITIES] = {0};
-    Entities parent[MAX_ENTITIES] = {static_cast<Entities>(0)};
+    int flags[MAX_ENTITIES] = {0};
+    int childCount[MAX_ENTITIES] = {0};
+    int childs[MAX_ENTITIES][4] = {0};
+    int parent[MAX_ENTITIES] = {0};
     sf::Transform transform[MAX_ENTITIES];
     sf::Transform worldTransform[MAX_ENTITIES];
     Textures::ID textureID[MAX_ENTITIES] = {static_cast<Textures::ID>(0)};
