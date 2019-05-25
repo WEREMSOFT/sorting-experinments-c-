@@ -74,11 +74,6 @@ int main() {
         }
     }
 
-//    for(int i = 0; i < MAX_ENTITIES / 2; i ++){
-//        utilsFunctions::move(tables, i, sf::Vector2f(utilsFunctions::PRNG(window.getSize().x), utilsFunctions::PRNG(window.getSize().y)));
-//    }
-
-
     // set parent child for all
     {
         for(int i = 0; i < MAX_ENTITIES; i += 10){
