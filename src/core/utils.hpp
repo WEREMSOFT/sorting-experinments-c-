@@ -32,9 +32,9 @@ namespace utilsFunctions {
 
 
     void setDirty(Tables& tables, uint id) {
-        if(tables.childCount[id] > 0) {
-            for(int i = 0; i < tables.childCount[id]; i++){
-                setDirty(tables, tables.childs[id][i]);
+        if(tables.childs.size() > 0) {
+            for(auto child: tables.childs[id]){
+                setDirty(tables, child);
             }
         }
         setDirtyFlag(tables, id);
@@ -50,9 +50,9 @@ namespace utilsFunctions {
 
         clearDirtyFlag(tables, id);
 
-        if(tables.childCount[id] > 0){
-            for(int i = 0; i < tables.childCount[id]; i++){
-                recalculateWorldTransform(tables, tables.childs[id][i]);
+        if(tables.childs.size() > 0){
+            for(int child: tables.childs[id]){
+                recalculateWorldTransform(tables, child);
             }
         }
 
@@ -75,8 +75,7 @@ namespace utilsFunctions {
 
     void setChild(Tables& tables, const uint id, const int parentID){
         tables.parent[id] = parentID;
-        tables.childs[parentID][tables.childCount[parentID]] = id;
-        tables.childCount[parentID]++;
+        tables.childs[parentID].emplace_back(id);
         setDirty(tables, id);
     }
 
