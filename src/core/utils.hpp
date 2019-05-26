@@ -84,11 +84,21 @@ namespace utilsFunctions {
 
     void draw(Tables& tables, Context& context){
         sf::RenderWindow& window = *context.window;
+        sf::Sprite sprite;
         if(window.isOpen()){
-            sf::Sprite sprite;
             for(int i = 0; i < MAX_ENTITIES; i++){
                 sprite.setTexture(context.textureHolder->get(tables.textureID[i]), true);
+                if(tables.flags[i] & Flags::ANIMATED){
+                    sprite.setTextureRect(tables.animations[i].textureRect);
+                    sprite.setOrigin(tables.animations[i].textureRect.width / 2.f, 0.f);
+                    if(tables.flags[i] & Flags::FLIPPED){
+                        sprite.scale(-1, 1);
+                    } else {
+                        sprite.scale(1, 1);
+                    }
+                }
                 window.draw(sprite, tables.worldTransform[i]);
+                sprite.setScale(1, 1);
             }
         }
     }

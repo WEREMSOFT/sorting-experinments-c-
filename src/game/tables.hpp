@@ -5,25 +5,23 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "resource_definitions.hpp"
-#define MAX_ENTITIES 100000
-#define MAX_ENTITIES_HALF 50000
+#include "../core/resources/animation.hpp"
+
+#define MAX_ENTITIES 100
 
 enum Entities {
     BACKGROUND,
     HOUSE,
     CAT,
+    TABLE,
     TILE,
-    TILE1,
-    TILE2,
-    TILE3,
-    TILE4,
-    TILE5,
-    TILE6,
     ENTITIES_COUNT
 };
 
 enum Flags{
     DIRTY = 1,
+    ANIMATED = 1 << 1,
+    FLIPPED = 1 << 2
 };
 
 typedef std::vector<int> IntVect;
@@ -39,6 +37,8 @@ struct Tables {
     SFTransformVect worldTransform;
     TexturesIDVect textureID;
     FontsIDVect fontsID;
+    std::vector<sf::FloatRect> textureRect;
+    std::vector<Animation::Struct> animations;
 
     Tables():
     flags(MAX_ENTITIES),
@@ -47,7 +47,10 @@ struct Tables {
     transform(MAX_ENTITIES),
     worldTransform(MAX_ENTITIES),
     textureID(MAX_ENTITIES),
-    fontsID(MAX_ENTITIES){}
+    fontsID(MAX_ENTITIES),
+    textureRect(MAX_ENTITIES),
+    animations(MAX_ENTITIES)
+    {}
 };
 
 
