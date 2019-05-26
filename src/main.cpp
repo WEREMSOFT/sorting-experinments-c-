@@ -17,19 +17,15 @@ namespace threads {
         std::mutex lockScopeHandler;
         while (window.isOpen()) {
             float dt = clock.restart().asSeconds();
-            lockScopeHandler.lock();
             for (int i = 0; i < MAX_ENTITIES; i++) {
                     utilsFunctions::rotate(tables, i, 45 * dt);
             }
-            lockScopeHandler.unlock();
         }
     }
 
     void recalculateTransforms(Tables& tables, sf::RenderWindow &window){
         sf::Clock clock;
-
         while (window.isOpen()) {
-            float dt = clock.restart().asSeconds();
             for (int i = 0; i < MAX_ENTITIES; i++) {
                 if (tables.flags[i] & Flags::DIRTY) {
                     utilsFunctions::recalculateWorldTransform(tables, i);
@@ -76,10 +72,21 @@ int main() {
 
     // set parent child for all
     {
-        for(int i = 0; i < MAX_ENTITIES; i += 10){
-            utilsFunctions::move(tables, i, sf::Vector2f(i / 20, 100));
-            for(int j=i; j < i + 9; j++){
-                utilsFunctions::setChild(tables, j + 1, j);
+        int cols = 90;
+        int rows = 90;
+        int gapCol = window.getSize().x / cols;
+        int gapRow = window.getSize().y / rows;
+        int childPerParent = 10;
+        int entityID = 0;
+
+        for(int i = 0; i < cols; i++){
+            for(int j = 0; j < rows; j++){
+                entityID++;
+                utilsFunctions::move(tables, entityID, sf::Vector2f(gapCol * i, gapRow * j));
+                for(int k = 0; k < childPerParent; k++){
+                    entityID++;
+                    utilsFunctions::setChild(tables, entityID, entityID-1);
+                }
             }
         }
     }
@@ -96,10 +103,8 @@ int main() {
         std::thread myUpdate(threads::rotateAll, std::ref(tables), std::ref(window));
         std::thread myRecalculateTransforms(threads::recalculateTransforms, std::ref(tables), std::ref(window));
 
+        sf::Event event;
         while (window.isOpen()) {
-            float dt = clock.restart().asSeconds();
-            acumulatedDelta += dt;
-            sf::Event event;
             while (window.pollEvent(event)) {
                 if (event.type == sf::Event::Closed)
                     window.close();
@@ -108,6 +113,9 @@ int main() {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
                 window.close();
             }
+
+            float dt = clock.restart().asSeconds();
+            acumulatedDelta += dt;
 
             if (acumulatedDelta >= FRAME_DELAY) {
                 acumulatedDelta = 0;
@@ -124,8 +132,6 @@ int main() {
         if (myUpdate.joinable()) myUpdate.join();
         if (myRecalculateTransforms.joinable()) myRecalculateTransforms.join();
     }
-
-    window.close();
 
     return 0;
 }

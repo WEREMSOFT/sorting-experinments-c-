@@ -32,7 +32,7 @@ namespace utilsFunctions {
 
 
     void setDirty(Tables& tables, uint id) {
-        if(tables.childs.size() > 0) {
+        if(tables.childs[id].size() > 0) {
             for(auto child: tables.childs[id]){
                 setDirty(tables, child);
             }
@@ -74,6 +74,7 @@ namespace utilsFunctions {
     }
 
     void setChild(Tables& tables, const uint id, const int parentID){
+        assert(id != parentID);
         tables.parent[id] = parentID;
         tables.childs[parentID].emplace_back(id);
         setDirty(tables, id);
@@ -83,10 +84,12 @@ namespace utilsFunctions {
 
     void draw(Tables& tables, Context& context){
         sf::RenderWindow& window = *context.window;
-        sf::Sprite sprite;
-        for(int i = 0; i < MAX_ENTITIES; i++){
-            sprite.setTexture(context.textureHolder->get(tables.textureID[i]), true);
-            window.draw(sprite, tables.worldTransform[i]);
+        if(window.isOpen()){
+            sf::Sprite sprite;
+            for(int i = 0; i < MAX_ENTITIES; i++){
+                sprite.setTexture(context.textureHolder->get(tables.textureID[i]), true);
+                window.draw(sprite, tables.worldTransform[i]);
+            }
         }
     }
 
