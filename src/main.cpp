@@ -72,7 +72,7 @@ int main() {
         gameUtils::setTypeEqualsIndex(tables);
 
         // Set some parent-child relationship
-        utilsFunctions::move(tables, Entities::TABLE, sf::Vector2f(500, 446));
+        transformUtils::move(tables, Entities::TABLE, sf::Vector2f(500, 446));
         utilsFunctions::setChild(tables, Entities::CAT, Entities::TABLE);
         utilsFunctions::setChild(tables, Entities::HOUSE, Entities::TABLE);
 
@@ -104,7 +104,7 @@ int main() {
             sortUtils::sortByType(tables);
 
             gameUtils::handleKeyboardEvent(tables, Entities::TABLE, dt);
-            utilsFunctions::recalculateWorldTransforms(tables, gameUtils::findFirstDirty(tables));
+            transformUtils::recalculateWorldTransforms(tables, gameUtils::findFirstDirty(tables));
 
 
 

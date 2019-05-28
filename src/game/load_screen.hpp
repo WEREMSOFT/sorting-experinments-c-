@@ -56,13 +56,13 @@ namespace LoadScreen {
 
             loadScreen.loadingText.setFont(loadScreen.context.fontHolder->get(Fonts::PRESS_START));
             loadScreen.loadingText.setString("Loading Resources");
-            utilsFunctions::centerOrigin(loadScreen.loadingText);
-            utilsFunctions::centerTextOnScreen(loadScreen.loadingText, *loadScreen.context.window);
+            alignUtils::centerOrigin(loadScreen.loadingText);
+            alignUtils::centerTextOnScreen(loadScreen.loadingText, *loadScreen.context.window);
 
             loadScreen.pressSpaceText.setFont(loadScreen.context.fontHolder->get(Fonts::PRESS_START));
             loadScreen.pressSpaceText.setString("Press Space to continue");
-            utilsFunctions::centerOrigin(loadScreen.pressSpaceText);
-            utilsFunctions::centerTextOnScreen(loadScreen.pressSpaceText, *loadScreen.context.window);
+            alignUtils::centerOrigin(loadScreen.pressSpaceText);
+            alignUtils::centerTextOnScreen(loadScreen.pressSpaceText, *loadScreen.context.window);
             loadScreen.pressSpaceText.move(0.f, 150.f);
 
             loadScreen.progressBarBackgroud.setFillColor(sf::Color::White);
