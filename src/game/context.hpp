@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "game/resource_definitions.hpp"
+#include "resource_definitions.hpp"
 
 
 struct Context {

@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
-
+#include <assert.h>
 
 template <typename Resource, typename Identifier>
 struct ResourceHolder {

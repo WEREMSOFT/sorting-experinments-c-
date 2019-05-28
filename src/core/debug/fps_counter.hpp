@@ -4,9 +4,7 @@
 
 #pragma once
 
-
 #include <SFML/Graphics.hpp>
-#include "../entities/game_object.hpp"
 
 namespace FPSCounter {
 
@@ -48,7 +46,7 @@ namespace FPSCounter {
 
         void recalculateFPS(FPSCounter::Struct& fps){
             float currentTime = fps.clock.restart().asSeconds();
-            fps.text = std::string("FPS: ");
+            fps.text = std::string("DO - FPS: ");
 
             fps.registeredFPS[fps.registeredFPSIndex % fps.MAX_REGISTERED_FPS] = (int)(1.f / (currentTime - fps.lastTime));
             fps.registeredFPSIndex++;
