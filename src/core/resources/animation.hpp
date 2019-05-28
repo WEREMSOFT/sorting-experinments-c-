@@ -25,8 +25,8 @@ namespace Animation {
         Struct() {
         }
 
-        Struct (const Struct &other) = delete;
-        Struct(const Struct &&other) = delete;
+//        Struct (const Struct &other) = delete;
+//        Struct(const Struct &&other) = delete;
     };
 
     namespace utils {
