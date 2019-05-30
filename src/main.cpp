@@ -9,28 +9,56 @@
 
 #define SCREEN_WITH 1230
 #define SCREEN_HEIGHT 768
-#define FRAME_DELAY 0.016 // Millisecconds
+#define UPDATE_DELAY 0.014 //Milliseconds
 
 bool gameIsRunning = true;
-//
-//namespace threads {
-//    void printPosition(Tables& tables, int id) {
-//        while(gameIsRunning){
-//            printf("Position %f, %f\n", tables.transform[id].getMatrix()[12], tables.transform[id].getMatrix()[13]);
-//        }
-//    }
-//
-//    void handleAnimation(Tables& tables, uint id){
-//        sf::Clock clock;
-//        float dt = clock.restart().asSeconds();
-//        while(gameIsRunning) {
-//            dt = clock.restart().asSeconds();
-//            Animation::utils::processAnimationFrame(tables.animations[id], dt);
-//        }
-//    }
-//
+
+namespace threads {
+
+    void printPosition(Tables& tables, int id) {
+        while(gameIsRunning){
+            printf("Position %f, %f\n", tables[id].transform.getMatrix()[12], tables[id].transform.getMatrix()[13]);
+        }
+    }
+
+    #define FRAME_DELAY 0.016 // Millisecconds
+    void draw(Tables& tables, Context& context){
+
+            sf::Clock clock;
+            sf::RenderWindow& window = *context.window;
+            FPSCounter::Struct fpsCounter;
+            fpsCounter.font = &context.fontHolder->get(Fonts::PRESS_START);
 
 
+            sf::Time sleepInterval = sf::seconds(UPDATE_DELAY);
+
+            while(gameIsRunning) {
+
+                clock.restart();
+
+                // recalculate transforms
+                sortUtils::sortByDirty(tables);
+                gameUtils::findFirstDirty(tables);
+
+                sortUtils::sortByZIndex(tables);
+
+                window.clear(sf::Color::Black);
+
+                utilsFunctions::draw(tables, context, 0, Entities::ENTITIES_COUNT);
+
+                FPSCounter::utils::recalculateFPS(fpsCounter);
+                FPSCounter::utils::draw(fpsCounter, window);
+
+                window.display();
+
+                sf::Time elapsedTime = clock.restart();
+
+                if(elapsedTime.asSeconds() < FRAME_DELAY) {
+                    sf::sleep(sleepInterval - elapsedTime);
+                }
+            }
+        }
+    }
 
 Context &loadScreen(Context &context) {
     {
@@ -41,8 +69,8 @@ Context &loadScreen(Context &context) {
     return context;
 }
 
-void recalculateWorldTransfrorms() {
-
+void handleAnimation(Tables& tables, uint id, float dt){
+    Animation::utils::processAnimationFrame(tables[id].animations, dt);
 }
 
 int main() {
@@ -71,18 +99,24 @@ int main() {
         // Set type = index for further reference
         gameUtils::setTypeEqualsIndex(tables);
 
-        // Set some parent-child relationship
+
+        // Cat animations
+        tables[Entities::CAT].animations.texture = &context.textureHolder->get(Textures::CAT_1_ANIMATION);
+        tables[Entities::CAT].animations.maxFrames = 8;
+        tables[Entities::CAT].animations.frameSize = {0, 767, 148, 193};
+        tables[Entities::CAT].animations.textureRect = {0, 767, 148, 193};
+        tables[Entities::CAT].animations.framesPerSeccond = 8;
+        tables[Entities::CAT].animations.centered = true;
+        tables[Entities::CAT].flags |= Flags::ANIMATED;
+
+
         transformUtils::move(tables, Entities::TABLE, sf::Vector2f(500, 446));
-        utilsFunctions::setChild(tables, Entities::CAT, Entities::TABLE);
-        utilsFunctions::setChild(tables, Entities::HOUSE, Entities::TABLE);
 
 
         sf::Clock clock;
-        FPSCounter::Struct fpsCounter;
-        fpsCounter.font = &fontHolder.get(Fonts::PRESS_START);
-        float acumulatedDelta = 0;
 
-        FPSCounter::utils::initialize(fpsCounter);
+        std::thread myDrawThread(threads::draw, std::ref(tables), std::ref(context));
+        sf::Time sleepInterval = sf::seconds(.02f);
 
         sf::Event event;
         while (gameIsRunning) {
@@ -99,32 +133,22 @@ int main() {
 
 
             float dt = clock.restart().asSeconds();
-            acumulatedDelta += dt;
 
             sortUtils::sortByType(tables);
+            handleAnimation(tables, Entities::CAT, dt);
 
-            gameUtils::handleKeyboardEvent(tables, Entities::TABLE, dt);
+            gameUtils::handleKeyboardEvent(tables, Entities::CAT, dt);
+            sortUtils::sortByDirty(tables);
             transformUtils::recalculateWorldTransforms(tables, gameUtils::findFirstDirty(tables));
 
-
-
-            if (acumulatedDelta >= FRAME_DELAY) {
-                acumulatedDelta = 0;
-
-                // recalculate transforms
-                sortUtils::sortByDirty(tables);
-                gameUtils::findFirstDirty(tables);
-
-                sortUtils::sortByZIndex(tables);
-                utilsFunctions::draw(tables, context, 0, Entities::ENTITIES_COUNT);
-
-                FPSCounter::utils::recalculateFPS(fpsCounter);
-                FPSCounter::utils::draw(fpsCounter, window);
-
-                window.display();
+            sf::Time elapsedTime = clock.getElapsedTime();
+            if(elapsedTime.asSeconds() < UPDATE_DELAY){
+                sf::sleep(sf::seconds(UPDATE_DELAY));
             }
 
         }
+
+        if(myDrawThread.joinable()) myDrawThread.join();
     }
     window.close();
     return 0;

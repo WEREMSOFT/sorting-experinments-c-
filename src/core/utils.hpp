@@ -36,7 +36,14 @@ namespace utilsFunctions {
 
     void draw(std::vector<GameObject>& tables, Context& context, int begin, int end){
         for(int i = begin; i < end; i++){
-            sprite.setTexture(context.textureHolder->get(tables[i].textureID));
+
+            if(tables[i].flags & Flags::ANIMATED) {
+                sprite.setTextureRect(tables[i].animations.textureRect);
+                sprite.setTexture(context.textureHolder->get(tables[i].textureID));
+            } else {
+                sprite.setTexture(context.textureHolder->get(tables[i].textureID), true);
+            }
+
             context.window->draw(sprite, tables[i].worldTransform);
         }
     }
