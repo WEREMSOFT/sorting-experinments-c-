@@ -32,19 +32,13 @@ namespace flagUtils{
 }
 
 namespace utilsFunctions {
-    sf::Sprite sprite;
-
     void draw(std::vector<GameObject>& tables, Context& context, int begin, int end){
         for(int i = begin; i < end; i++){
-
             if(tables[i].flags & Flags::ANIMATED) {
-                sprite.setTextureRect(tables[i].animations.textureRect);
-                sprite.setTexture(context.textureHolder->get(tables[i].textureID));
-            } else {
-                sprite.setTexture(context.textureHolder->get(tables[i].textureID), true);
+                tables[i].sprite.setTextureRect(tables[i].animations.textureRect);
             }
 
-            context.window->draw(sprite, tables[i].worldTransform);
+            context.window->draw(tables[i].sprite, tables[i].worldTransform);
         }
     }
 
@@ -73,17 +67,21 @@ namespace utilsFunctions {
 
 namespace transformUtils {
 
-    void move(Tables& tables, const uint id, const sf::Vector2f& moveVector) {
-        tables[id].transform.translate(moveVector);
+    void move(Tables& tables, const int id, const sf::Vector2f& moveVector) {
+        tables[id].sprite.move(moveVector);
         flagUtils::setDirty(tables, id);
     }
 
+    void setPosition(Tables& tables, int id, const sf::Vector2f& moveVector){
+        tables[id].sprite.setPosition(moveVector);
+        flagUtils::setDirty(tables, id);
+    }
 
     void recalculateWorldTransform(Tables& tables, const uint id){
         if(tables[id].parent != 0){
-            tables[id].worldTransform = tables[tables[id].parent].worldTransform * tables[id].transform;
+            tables[id].worldTransform = tables[tables[id].parent].worldTransform * tables[id].sprite.getTransform();
         } else {
-            tables[id].worldTransform = tables[id].transform;
+            tables[id].worldTransform = tables[id].sprite.getTransform();
         }
 
 
@@ -104,7 +102,7 @@ namespace transformUtils {
     }
 
     void rotate(Tables& tables, const uint id, float angle) {
-        tables[id].transform.rotate(angle, 32, 32);
+        tables[id].sprite.rotate(angle);
         flagUtils::setDirty(tables, id);
     }
 }
@@ -121,8 +119,7 @@ namespace alignUtils {
 
 
     void centerOnScreen(Tables& tables, uint id, sf::RenderWindow &window){
-        tables[id].transform = sf::Transform::Identity;
-        transformUtils::move(tables, id, sf::Vector2f(window.getView().getSize().x / 2u, window.getView().getSize().y / 2u));
+        tables[id].sprite.move(sf::Vector2f(window.getView().getSize().x / 2u, window.getView().getSize().y / 2u));
     }
 }
 
@@ -187,4 +184,12 @@ namespace gameUtils {
 
         return -1;
     }
+
+    void handleAnimation(Tables& tables, uint id, float dt){
+        Animation::utils::processAnimationFrame(tables[id].animations, dt);
+    }
+}
+
+namespace screenUtils {
+
 }

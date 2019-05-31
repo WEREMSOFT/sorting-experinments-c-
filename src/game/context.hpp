@@ -8,13 +8,16 @@ struct Context {
     sf::RenderWindow *window;
     TextureHolder *textureHolder;
     FontHolder *fontHolder;
+    int currentGameScreen;
 
     Context(sf::RenderWindow &pWindow,
             TextureHolder &pTextureHolder,
-            FontHolder &pFontHolder) :
+            FontHolder &pFontHolder,
+            int gameScreen) :
             window(&pWindow),
             textureHolder(&pTextureHolder),
-            fontHolder(&pFontHolder) {}
+            fontHolder(&pFontHolder),
+            currentGameScreen(gameScreen){}
 
     Context(const Context& context) = delete;
 };

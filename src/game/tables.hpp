@@ -7,9 +7,13 @@
 #include "resource_definitions.hpp"
 #include "../core/resources/animation.hpp"
 
-#define MAX_ENTITIES_SOA 1
 #define MAX_ENTITIES 100
 
+enum Screens {
+    TITLE,
+    GAME_TILE,
+    GAME
+};
 
 enum Entities {
     BACKGROUND,
@@ -76,11 +80,9 @@ struct GameObject {
     int parent = 0;
     Fonts::ID fontsID;
     std::vector<int> children;
-    sf::Transform transform;
     sf::Transform worldTransform;
-    Textures::ID textureID;
-    sf::FloatRect textureRect;
     Animation::Struct animations;
+    sf::Sprite sprite;
 };
 
 typedef std::vector<GameObject> Tables;
