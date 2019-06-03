@@ -13,7 +13,6 @@ namespace Animation {
 
     struct Struct {
         AnimationState state = AnimationState::PLAYING;
-        sf::Texture* texture;
         int maxFrames = 0;
         float frame = 0.f;
         float framesPerSeccond = 30.f;
@@ -24,9 +23,6 @@ namespace Animation {
 
         Struct() {
         }
-
-//        Struct (const Struct &other) = delete;
-//        Struct(const Struct &&other) = delete;
     };
 
     namespace utils {
@@ -73,14 +69,6 @@ namespace Animation {
             gotoFrame(anim, frame);
         }
 
-        void setCentered(Animation::Struct& anim, bool pCentered, sf::Sprite& sprite) {
-            anim.centered = pCentered;
-            if (anim.centered) {
-                sprite.setOrigin(anim.frameSize.width / 2, 0.0);
-            } else {
-                sprite.setOrigin(0.0, 0.0);
-            }
-        }
 
     };
 

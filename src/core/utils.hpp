@@ -35,7 +35,13 @@ namespace utilsFunctions {
     void draw(std::vector<GameObject>& tables, Context& context, int begin, int end){
         for(int i = begin; i < end; i++){
             if(tables[i].flags & Flags::ANIMATED) {
-                tables[i].sprite.setTextureRect(tables[i].animations.textureRect);
+                tables[i].sprite.setTextureRect(tables[i].animation.textureRect);
+            }
+
+            if(tables[i].flags & Flags::FLIPPED){
+                tables[i].sprite.setScale(-1, tables[i].sprite.getScale().y);
+            } else {
+                tables[i].sprite.setScale(1, tables[i].sprite.getScale().y);
             }
 
             context.window->draw(tables[i].sprite, tables[i].worldTransform);
@@ -81,7 +87,7 @@ namespace transformUtils {
         if(tables[id].parent != 0){
             tables[id].worldTransform = tables[tables[id].parent].worldTransform * tables[id].sprite.getTransform();
         } else {
-            tables[id].worldTransform = tables[id].sprite.getTransform();
+            tables[id].worldTransform = sf::Transform::Identity;
         }
 
 
@@ -158,8 +164,8 @@ namespace gameUtils {
     }
 
     void handleKeyboardEvent(Tables& tables, int id, float dt){
-        const float thingySpeed = 1000;
-
+        const float thingySpeed = 500;
+        tables[id].lastPosition = tables[id].sprite.getPosition();
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
             transformUtils::move(tables, id, sf::Vector2f(-thingySpeed * dt, 0));
             tables[id].flags &= ~Flags::FLIPPED;
@@ -174,7 +180,6 @@ namespace gameUtils {
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
             transformUtils::move(tables, id, sf::Vector2f(0, thingySpeed * dt));
         }
-
     }
 
     int findFirstDirty(Tables& tables){
@@ -186,10 +191,6 @@ namespace gameUtils {
     }
 
     void handleAnimation(Tables& tables, uint id, float dt){
-        Animation::utils::processAnimationFrame(tables[id].animations, dt);
+        Animation::utils::processAnimationFrame(tables[id].animation, dt);
     }
-}
-
-namespace screenUtils {
-
 }

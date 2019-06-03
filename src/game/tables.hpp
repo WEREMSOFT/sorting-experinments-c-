@@ -35,6 +35,7 @@ typedef std::vector<sf::Transform> SFTransformVect;
 typedef std::vector<Textures::ID> TexturesIDVect;
 typedef std::vector<Fonts::ID> FontsIDVect;
 
+
 /*
  DOD rules:
  ==========
@@ -74,6 +75,7 @@ typedef std::vector<Fonts::ID> FontsIDVect;
 
 struct GameObject {
     int type = 0;
+    int state = 0;
     uint flags = 0;
     int zIndex = 0;
     int worldZIndex = 0;
@@ -81,8 +83,9 @@ struct GameObject {
     Fonts::ID fontsID;
     std::vector<int> children;
     sf::Transform worldTransform;
-    Animation::Struct animations;
+    Animation::Struct animation;
     sf::Sprite sprite;
+    sf::Vector2f lastPosition;
 };
 
 typedef std::vector<GameObject> Tables;

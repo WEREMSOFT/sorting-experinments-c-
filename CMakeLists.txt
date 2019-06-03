@@ -11,4 +11,4 @@ else()
 endif()
 file(COPY assets DESTINATION ./)
 
-add_executable(SFMLDODGame src/main.cpp src/core/debug/fps_counter.hpp src/core/resources/resource_holder.hpp src/game/resource_definitions.hpp src/game/load_screen.hpp src/game/context.hpp src/core/utils.hpp src/core/resources/animation.hpp src/game/tables.hpp src/headers.hpp src/game/defines.hpp src/game/threads.hpp src/game/screens/game_screen.hpp src/game/screens/loading_screen.hpp src/game/screens/title_screen.hpp src/game/screens/game_screen_tile.hpp)
+add_executable(SFMLDODGame src/main.cpp src/core/debug/fps_counter.hpp src/core/resources/resource_holder.hpp src/game/resource_definitions.hpp src/game/load_screen.hpp src/game/context.hpp src/core/utils.hpp src/core/resources/animation.hpp src/game/tables.hpp src/headers.hpp src/game/defines.hpp src/game/threads.hpp src/game/screens/game_screen.hpp src/game/screens/loading_screen.hpp src/game/screens/title_screen.hpp src/game/screens/game_screen_tile.hpp src/game/characters/cat/cat.hpp)

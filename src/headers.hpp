@@ -13,8 +13,11 @@
 #include <functional>
 #include <mutex>
 #include "game/threads.hpp"
+// GameElements
+#include "./game/characters/cat/cat.hpp"
 
 // screens
+#include "core/resources/animation.hpp"
 #include "game/screens/game_screen.hpp"
 #include "game/screens/loading_screen.hpp"
 #include "game/screens/game_screen.hpp"
