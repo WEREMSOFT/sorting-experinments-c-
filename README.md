@@ -1,14 +1,13 @@
 # DOD rules:
 
  1. IF YOU UNDERSTAND THE DATA, YOU UNDERSTAND THE PROBLEM.
- 2. Everything is public.
- 3. You have ONE entity_type of GameObject.
- 4. You have ONE array of objects. Called "tables"
- 5. Class methods are FORBIDDEN. Constructors are ok.
- 6. Templates are forbidden(std::vector is ok)
- 7. The GameObjects in the array are transformed by functions with the signature:
+ 2. Solve the problem you have, not the problem you want.
+ 3. Everything is public.
+ 4. Struct methods are FORBIDDEN. Constructors are ok.
+ 5. Templates are forbidden(std::vector is ok)
+ 6. The GameObjects in the array are transformed by functions with the signature:
     void functionName(std::vector<Tables>& tables, int begin, int end, ...)
- 8. If's inside function myst be avoided, SORT THE ARRAY and iterate the part of it you are interested
+ 7. If's inside function myst be avoided, SORT THE ARRAY and iterate the part of it you are interested
     As an example, if you want to draw only the visible objects, don't do
     ```C
     for(int i = begin; i < end; i++){
