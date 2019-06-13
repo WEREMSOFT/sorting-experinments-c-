@@ -3,194 +3,261 @@
 //
 
 #pragma once
+
 #include <SFML/Graphics.hpp>
 #include "../game/tables.hpp"
 
+// ## SORTING
 
-namespace flagUtils{
-    inline void setDirtyFlag(Tables& tables, uint id){
-        tables[id].flags |= Flags::DIRTY;
+inline int sort_by_dirty(Tables &tables) {
+    auto compareLambda = [](const GameObject &a, const GameObject &b) -> bool {
+        return ((a.flags & Flags::DIRTY) < (b.flags & Flags::DIRTY));
+    };
+
+    std::sort(tables.begin(), tables.begin() + Entities::ENTITIES_COUNT, compareLambda);
+
+    for (int i = 0; i < ENTITIES_COUNT; i++) {
+        if (tables[i].flags & Flags::DIRTY) return i;
     }
+    return 0;
+}
 
-    inline void clearDirtyFlag(Tables& tables, uint id){
-        tables[id].flags &= ~Flags::DIRTY;
+int sort_by_animated(Tables &tables) {
+    auto compareLambda = [](const GameObject &a, const GameObject &b) -> bool {
+        return ((a.flags & Flags::ANIMATED) < (b.flags & Flags::ANIMATED));
+    };
+
+    std::sort(tables.begin(), tables.begin() + Entities::ENTITIES_COUNT, compareLambda);
+
+    for (int i = 0; i < ENTITIES_COUNT; i++) {
+        if (tables[i].flags & Flags::ANIMATED) return i;
     }
+    return 0;
+}
 
-    inline bool isDirty(Tables& tables, uint id){
-        return tables[id].flags & Flags::DIRTY;
-    }
-
-
-    void setDirty(Tables& tables, uint id) {
-        if(tables[id].children.size() > 0) {
-            for(auto child: tables[id].children){
-                setDirty(tables, child);
-            }
+namespace threads {
+    void thread_print_position(Tables &tables, int id) {
+        while (gameIsRunning) {
+            sf::Vector2f position = tables[id].sprite.getPosition();
+            printf("Position %f, %f\n", position.x, position.y);
         }
-        setDirtyFlag(tables, id);
     }
 }
 
-namespace utilsFunctions {
-    void draw(std::vector<GameObject>& tables, Context& context, int begin, int end){
-        for(int i = begin; i < end; i++){
-            if(tables[i].flags & Flags::ANIMATED) {
-                tables[i].sprite.setTextureRect(tables[i].animation.textureRect);
-            }
+unsigned int PRNG(int max) {
+    // our initial starting seed is 5323
+    static unsigned int seed = 5323;
 
-            if(tables[i].flags & Flags::FLIPPED){
-                tables[i].sprite.setScale(-1, tables[i].sprite.getScale().y);
-            } else {
-                tables[i].sprite.setScale(1, tables[i].sprite.getScale().y);
-            }
+    // Take the current seed and generate a new value from it
+    // Due to our use of large constants and overflow, it would be
+    // hard for someone to casually predict what the next number is
+    // going to be from the previous one.
+    seed = 8253729 * seed + 2396403;
 
-            context.window->draw(tables[i].sprite, tables[i].worldTransform);
-        }
+    // Take the seed and return a value between 0 and 32767
+    return seed % 32768 % max;
+}
+
+// ## ENTITY
+
+void entity_center_on_screen(Tables &tables, uint id, sf::RenderWindow &window) {
+    tables[id].sprite.move(sf::Vector2f(window.getView().getSize().x / 2u, window.getView().getSize().y / 2u));
+}
+
+void entity_handle_animation(Tables &tables, uint id, float dt) {
+    Animation::utils::animation_process_frame(tables[id].animation, dt);
+}
+
+void entity_move(Tables &tables, const int id, const sf::Vector2f &moveVector) {
+    tables[id].sprite.move(moveVector);
+}
+
+void entity_recalculate_world_transform(Tables &tables, int id) {
+
+    if (tables[id].parent > -1) {
+        entity_recalculate_world_transform(tables, tables[id].parent);
+        tables[id].worldTransform =
+                tables[tables[id].parent].worldTransform * tables[tables[id].parent].sprite.getTransform();
+    } else {
+        tables[id].worldTransform = sf::Transform::Identity;
     }
 
-    void setChild(Tables& tables, const uint id, const int parentID){
-        assert(id != parentID);
-        tables[id].parent = parentID;
-        tables[parentID].children.emplace_back(id);
-        flagUtils::setDirty(tables, id);
-    }
+}
 
-    unsigned int PRNG(int max)
-    {
-        // our initial starting seed is 5323
-        static unsigned int seed = 5323;
-
-        // Take the current seed and generate a new value from it
-        // Due to our use of large constants and overflow, it would be
-        // hard for someone to casually predict what the next number is
-        // going to be from the previous one.
-        seed = 8253729 * seed + 2396403;
-
-        // Take the seed and return a value between 0 and 32767
-        return seed  % 32768 % max;
+void entity_recalculate_world_transforms(Tables &tables) {
+    for (int i = 0; i < Entities::ENTITIES_COUNT; i++) {
+        entity_recalculate_world_transform(tables, i);
     }
 }
 
-namespace transformUtils {
+void entity_rotate(Tables &tables, const uint id, float angle) {
+    tables[id].sprite.rotate(angle);
+}
 
-    void move(Tables& tables, const int id, const sf::Vector2f& moveVector) {
-        tables[id].sprite.move(moveVector);
-        flagUtils::setDirty(tables, id);
-    }
+void entity_set_child(Tables &tables, const uint id, const int parentID) {
+    assert(id != parentID);
+    tables[id].parent = parentID;
+}
 
-    void setPosition(Tables& tables, int id, const sf::Vector2f& moveVector){
-        tables[id].sprite.setPosition(moveVector);
-        flagUtils::setDirty(tables, id);
-    }
+void entity_set_position(Tables &tables, int id, const sf::Vector2f &moveVector) {
+    tables[id].sprite.setPosition(moveVector);
+}
 
-    void recalculateWorldTransform(Tables& tables, const uint id){
-        if(tables[id].parent != 0){
-            tables[id].worldTransform = tables[tables[id].parent].worldTransform * tables[id].sprite.getTransform();
+void entity_set_scale_based_on_flipped_flag(Tables& tables){
+    for (int i = 0; i < Entities::ENTITIES_COUNT; i++) {
+        if (tables[i].flags & Flags::FLIPPED) {
+            tables[i].sprite.setScale(-1, tables[i].sprite.getScale().y);
         } else {
-            tables[id].worldTransform = sf::Transform::Identity;
-        }
-
-
-        flagUtils::clearDirtyFlag(tables, id);
-
-        if(tables[id].children.size() > 0){
-            for(int child: tables[id].children){
-                recalculateWorldTransform(tables, child);
-            }
-        }
-
-    }
-
-    void recalculateWorldTransforms(Tables& tables, int firstDirty){
-        for(int i = firstDirty; i < Entities::ENTITIES_COUNT; i++){
-            recalculateWorldTransform(tables, i);
+            tables[i].sprite.setScale(1, tables[i].sprite.getScale().y);
         }
     }
-
-    void rotate(Tables& tables, const uint id, float angle) {
-        tables[id].sprite.rotate(angle);
-        flagUtils::setDirty(tables, id);
+}
+void entity_set_type_equals_index(Tables &tables) {
+    for (int i = 0; i < Entities::ENTITIES_COUNT; i++) {
+        tables[i].entity_type = i;
     }
 }
 
-namespace alignUtils {
-    void centerOrigin(sf::Text &sprite) {
-        sf::FloatRect bounds{sprite.getLocalBounds()};
-        sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
-    }
-
-    void centerTextOnScreen(sf::Text &text, sf::RenderWindow &window){
-        text.setPosition(window.getView().getSize().x / 2u, window.getView().getSize().y / 2u);
-    }
-
-
-    void centerOnScreen(Tables& tables, uint id, sf::RenderWindow &window){
-        tables[id].sprite.move(sf::Vector2f(window.getView().getSize().x / 2u, window.getView().getSize().y / 2u));
+void entity_set_zindex_equals_y(Tables &tables) {
+    for (int i = 0; i < Entities::ENTITIES_COUNT; i++) {
+        tables[i].zIndex = tables[i].sprite.getPosition().y;
     }
 }
 
-namespace sortUtils {
+// ## CAT
 
-    void sortByDirty(Tables& tables){
-        auto compareLambda = [](const GameObject& a, const GameObject& b) -> bool {
-            return ((a.flags & Flags::DIRTY) < (b.flags & Flags::DIRTY));
-        };
+typedef std::vector<Animation::Struct> AnimationVector;
 
-        std::sort(tables.begin(), tables.begin() + Entities::ENTITIES_COUNT, compareLambda);
+void cat_animations_init(AnimationVector &animations, Context &context) {
+    animations[cat::Animations::ANIM_IDLE].maxFrames = 5;
+    animations[cat::Animations::ANIM_IDLE].frameSize = {0, 26, 135, 154};
+    animations[cat::Animations::ANIM_IDLE].framesPerSeccond = 10;
+    animations[cat::Animations::ANIM_IDLE].centered = true;
+    animations[cat::Animations::ANIM_IDLE].state = Animation::AnimationState::PLAYING;
+
+    animations[cat::Animations::ANIM_WALKING].maxFrames = 8;
+    animations[cat::Animations::ANIM_WALKING].frameSize = {0, 767, 148, 193};
+    animations[cat::Animations::ANIM_WALKING].framesPerSeccond = 8;
+    animations[cat::Animations::ANIM_WALKING].centered = true;
+    animations[cat::Animations::ANIM_WALKING].state = Animation::AnimationState::PLAYING;
+}
+
+void cat_keyboard_event_handler(Tables &tables, int id, float dt) {
+    const float thingySpeed = 500;
+    tables[id].lastPosition = tables[id].sprite.getPosition();
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+        entity_move(tables, id, sf::Vector2f(-thingySpeed * dt, 0));
+        tables[id].flags &= ~Flags::FLIPPED;
     }
-
-    void sortByType(Tables& tables) {
-        auto compareLambda = [](const GameObject& a, const GameObject& b) -> bool {
-            return (a.type < b.type);
-        };
-
-        std::sort(tables.begin(), tables.begin() + Entities::ENTITIES_COUNT, compareLambda);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+        entity_move(tables, id, sf::Vector2f(thingySpeed * dt, 0));
+        tables[id].flags |= Flags::FLIPPED;
     }
-
-    void sortByZIndex(Tables& tables){
-        auto compareLambda = [](const GameObject& a, const GameObject& b) -> bool {
-            return (a.zIndex < b.zIndex);
-        };
-
-        std::sort(tables.begin(), tables.begin() + (int)Entities::ENTITIES_COUNT, compareLambda);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+        entity_move(tables, id, sf::Vector2f(0, -thingySpeed * dt));
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+        entity_move(tables, id, sf::Vector2f(0, thingySpeed * dt));
     }
 }
 
-namespace gameUtils {
-    void setTypeEqualsIndex(Tables &tables) {
-        for(int i = 0; i < Entities::ENTITIES_COUNT; i++){
-            tables[i].type = i;
-        }
-    }
+void cat_state_to_idle(Tables &tables, int id, AnimationVector &animations) {
+    tables[id].state = cat::States::IDLE;
+    tables[id].animation = animations[cat::Animations::ANIM_IDLE];
+    tables[id].sprite.setOrigin(tables[id].animation.frameSize.width / 2, 0.0);
+}
 
-    void handleKeyboardEvent(Tables& tables, int id, float dt){
-        const float thingySpeed = 500;
-        tables[id].lastPosition = tables[id].sprite.getPosition();
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
-            transformUtils::move(tables, id, sf::Vector2f(-thingySpeed * dt, 0));
-            tables[id].flags &= ~Flags::FLIPPED;
-        }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
-            transformUtils::move(tables, id, sf::Vector2f(thingySpeed * dt, 0));
-            tables[id].flags |= Flags::FLIPPED;
-        }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
-            transformUtils::move(tables, id, sf::Vector2f(0, -thingySpeed * dt));
-        }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
-            transformUtils::move(tables, id, sf::Vector2f(0, thingySpeed * dt));
-        }
-    }
+void cat_state_to_walking(Tables &tables, int id, AnimationVector &animations) {
+    tables[id].state = cat::States::WALKING;
+    tables[id].animation = animations[cat::Animations::ANIM_WALKING];
+    tables[id].sprite.setOrigin(tables[id].animation.frameSize.width / 2, 0.0);
+}
 
-    int findFirstDirty(Tables& tables){
-        for(int i = Entities::ENTITIES_COUNT - 1; i >= 0; i--) {
-            if(!flagUtils::isDirty(tables, i)) return i;
-        }
-
-        return -1;
-    }
-
-    void handleAnimation(Tables& tables, uint id, float dt){
-        Animation::utils::processAnimationFrame(tables[id].animation, dt);
+void cat_state_process_idle(Tables &tables, int id, AnimationVector &animations) {
+    if (tables[id].lastPosition != tables[id].sprite.getPosition()) {
+        cat_state_to_walking(tables, id, animations);
     }
 }
+
+void cat_state_process_walking(Tables &tables, int id, AnimationVector &animations) {
+    if (tables[id].lastPosition == tables[id].sprite.getPosition()) {
+        cat_state_to_idle(tables, id, animations);
+    }
+}
+
+void draw(std::vector<GameObject> &tables, Context &context, int begin, int end) {
+    for (int i = begin; i < end; i++) {
+        context.window->draw(tables[i].sprite, tables[i].worldTransform);
+    }
+}
+
+void print_position(Tables &tables, int id) {
+    sf::Vector2f position = tables[id].sprite.getPosition();
+    printf("Position %f, %f\n", position.x, position.y);
+}
+
+void print_zindex(Tables &tables, int id) {
+    printf("Z-Index %d\n", tables[id].zIndex);
+}
+
+void process_animations(Tables &tables, int firstAnimated) {
+    {
+        for (int i = firstAnimated; i < Entities::ENTITIES_COUNT; i++) {
+            tables[i].sprite.setTextureRect(tables[i].animation.textureRect);
+        }
+    }
+}
+
+void sort_by_entity_type(Tables &tables) {
+    auto compareLambda = [](const GameObject &a, const GameObject &b) -> bool {
+        return (a.entity_type < b.entity_type);
+    };
+
+    std::sort(tables.begin(), tables.begin() + Entities::ENTITIES_COUNT, compareLambda);
+}
+
+void sort_by_z_index(Tables &tables) {
+    auto compareLambda = [](const GameObject &a, const GameObject &b) -> bool {
+        return (a.zIndex < b.zIndex);
+    };
+
+    std::sort(tables.begin(), tables.begin() + (int) Entities::ENTITIES_COUNT, compareLambda);
+}
+
+void text_center_on_screen(sf::Text &text, sf::RenderWindow &window) {
+    text.setPosition(window.getView().getSize().x / 2u, window.getView().getSize().y / 2u);
+}
+
+
+void text_center_origin(sf::Text &text) {
+    sf::FloatRect bounds{text.getLocalBounds()};
+    text.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+}
+
+void tile_keyboard_event_handler(Tables &tables, int id) {
+    tables[id].lastPosition = tables[id].sprite.getPosition();
+    int thingySpeed = 128;
+
+    static int lastStatusKeys[sf::Keyboard::KeyCount] = {0};
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !lastStatusKeys[sf::Keyboard::Left]) {
+        entity_move(tables, id, sf::Vector2f(-thingySpeed, 0));
+        tables[id].flags &= ~Flags::FLIPPED;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && !lastStatusKeys[sf::Keyboard::Right]) {
+        entity_move(tables, id, sf::Vector2f(thingySpeed, 0));
+        tables[id].flags |= Flags::FLIPPED;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !lastStatusKeys[sf::Keyboard::Up]) {
+        entity_move(tables, id, sf::Vector2f(0, -thingySpeed));
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !lastStatusKeys[sf::Keyboard::Down]) {
+        entity_move(tables, id, sf::Vector2f(0, thingySpeed));
+    }
+
+    lastStatusKeys[sf::Keyboard::Left] = sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
+    lastStatusKeys[sf::Keyboard::Right] = sf::Keyboard::isKeyPressed(sf::Keyboard::Right);
+    lastStatusKeys[sf::Keyboard::Up] = sf::Keyboard::isKeyPressed(sf::Keyboard::Up);
+    lastStatusKeys[sf::Keyboard::Down] = sf::Keyboard::isKeyPressed(sf::Keyboard::Down);
+}
+

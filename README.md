@@ -2,7 +2,7 @@
 
  1. IF YOU UNDERSTAND THE DATA, YOU UNDERSTAND THE PROBLEM.
  2. Everything is public.
- 3. You have ONE type of GameObject.
+ 3. You have ONE entity_type of GameObject.
  4. You have ONE array of objects. Called "tables"
  5. Class methods are FORBIDDEN. Constructors are ok.
  6. Templates are forbidden(std::vector is ok)

@@ -31,7 +31,7 @@ namespace Animation {
         typedef std::vector<sf::Texture> Textures;
         typedef std::vector<sf::FloatRect> TextureRects;
 
-        void playAnimation(Animation::Struct& anim) {
+        void animation_play(Animation::Struct &anim) {
             anim.state = AnimationState::PLAYING;
         }
 
@@ -39,14 +39,14 @@ namespace Animation {
             anim.state = AnimationState::STOPED;
         }
 
-        void gotoFrame(Animation::Struct& anim, int frame) {
+        void animation_goto_frame(Animation::Struct &anim, int frame) {
             anim.textureRect.left = anim.frameSize.left + anim.frameSize.width * (int)anim.frame;
             anim.textureRect.top = anim.frameSize.top;
             anim.textureRect.width = anim.frameSize.width;
             anim.textureRect.height = anim.frameSize.height;
         }
 
-        void processAnimationFrame(Animation::Struct& anim, const float delta) {
+        void animation_process_frame(Animation::Struct &anim, const float delta) {
             if (anim.state == AnimationState::PLAYING) {
                 anim.frame += anim.framesPerSeccond * delta;
 
@@ -58,15 +58,15 @@ namespace Animation {
                 }
             }
 
-            Animation::utils::gotoFrame(anim, int(anim.frame));
+            Animation::utils::animation_goto_frame(anim, int(anim.frame));
         }
 
 
-        void gotoAndStop(Animation::Struct& anim, int frame) {
+        void animation_goto_and_stop(Animation::Struct &anim, int frame) {
             stopAnimation(anim);
             anim.frame = (anim.frame > anim.maxFrames) ? anim.maxFrames : anim.frame;
             anim.frame = frame;
-            gotoFrame(anim, frame);
+            animation_goto_frame(anim, frame);
         }
 
 

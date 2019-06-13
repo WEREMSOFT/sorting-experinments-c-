@@ -7,14 +7,11 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "game/context.hpp"
-#include "game/load_screen.hpp"
+#include "game/screens/load_screen.hpp"
 #include "game/tables.hpp"
 #include "core/debug/fps_counter.hpp"
 #include <functional>
 #include <mutex>
-#include "game/threads.hpp"
-// GameElements
-#include "./game/characters/cat/cat.hpp"
 
 // screens
 #include "core/resources/animation.hpp"

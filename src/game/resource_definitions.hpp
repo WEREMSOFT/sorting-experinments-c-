@@ -5,10 +5,12 @@
 namespace Textures{
     enum ID {
         TITLE_BACKGROUND_TILE,
-        BACKGROUND,
         TABLE,
         HOUSE,
         LIGHT_O_TABLE,
+        BACKGROUND,
+        SCI_FI_TILES,
+        MOTH,
         TITLE_MAIN_IMAGE,
         CAT_1_ANIMATION,
         TEXTURE_COUNT

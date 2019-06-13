@@ -29,7 +29,7 @@ void title_screen(Tables &tables, Context &context) {
             gameIsRunning = false;
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
             context.currentGameScreen = Screens::GAME;
         }
 

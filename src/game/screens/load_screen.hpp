@@ -7,8 +7,8 @@
 #include <thread>
 #include <mutex>
 #include <SFML/Graphics.hpp>
-#include "resource_definitions.hpp"
-#include "../core/utils.hpp"
+#include "../resource_definitions.hpp"
+#include "../../core/utils.hpp"
 
 namespace LoadScreen {
     struct Struct {
@@ -56,13 +56,13 @@ namespace LoadScreen {
 
             loadScreen.loadingText.setFont(loadScreen.context.fontHolder->get(Fonts::PRESS_START));
             loadScreen.loadingText.setString("Loading Resources");
-            alignUtils::centerOrigin(loadScreen.loadingText);
-            alignUtils::centerTextOnScreen(loadScreen.loadingText, *loadScreen.context.window);
+            text_center_origin(loadScreen.loadingText);
+            text_center_on_screen(loadScreen.loadingText, *loadScreen.context.window);
 
             loadScreen.pressSpaceText.setFont(loadScreen.context.fontHolder->get(Fonts::PRESS_START));
             loadScreen.pressSpaceText.setString("Press Space to continue");
-            alignUtils::centerOrigin(loadScreen.pressSpaceText);
-            alignUtils::centerTextOnScreen(loadScreen.pressSpaceText, *loadScreen.context.window);
+            text_center_origin(loadScreen.pressSpaceText);
+            text_center_on_screen(loadScreen.pressSpaceText, *loadScreen.context.window);
             loadScreen.pressSpaceText.move(0.f, 150.f);
 
             loadScreen.progressBarBackgroud.setFillColor(sf::Color::White);
@@ -91,6 +91,13 @@ namespace LoadScreen {
                                             "../assets/images/title.png");
             loadScreen.threads.emplace_back(loadScreen.loadTexture, Textures::CAT_1_ANIMATION,
                                             "../assets/images/characters/cat1.png");
+            loadScreen.threads.emplace_back(loadScreen.loadTexture, Textures::SCI_FI_TILES,
+                                            "../assets/images/sci-fi-tile.png");
+            loadScreen.threads.emplace_back(loadScreen.loadTexture, Textures::MOTH,
+                                            "../assets/images/characters/moth_single.png");
+
+
+
 
 
             std::cout << "...assets loaded" << std::endl;

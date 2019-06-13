@@ -7,7 +7,7 @@
 #include "resource_definitions.hpp"
 #include "../core/resources/animation.hpp"
 
-#define MAX_ENTITIES 100
+#define MAX_ENTITIES 50
 
 enum Screens {
     TITLE,
@@ -20,7 +20,9 @@ enum Entities {
     HOUSE,
     TABLE,
     CAT,
-    ENTITIES_COUNT
+    MOTH,
+    ENTITIES_COUNT,
+    SCI_FI_TILES,
 };
 
 enum Flags{
@@ -41,7 +43,7 @@ typedef std::vector<Fonts::ID> FontsIDVect;
  ==========
  1.a. IF YOU UNDERSTAND THE DATA, YOU UNDERSTAND THE PROBLEM.
  1. Everything is public.
- 2. You have ONE type of GameObject.
+ 2. You have ONE entity_type of GameObject.
  3. You have ONE array of objects. Called "tables"
  4. Class methods are FORBIDDEN. Constructors are ok.
  5. Templates are forbidden(std::vector is ok)
@@ -74,18 +76,33 @@ typedef std::vector<Fonts::ID> FontsIDVect;
 
 
 struct GameObject {
-    int type = 0;
+    int entity_type = 0;
     int state = 0;
     uint flags = 0;
     int zIndex = 0;
-    int worldZIndex = 0;
-    int parent = 0;
+    int parent = -1;
     Fonts::ID fontsID;
-    std::vector<int> children;
     sf::Transform worldTransform;
     Animation::Struct animation;
     sf::Sprite sprite;
     sf::Vector2f lastPosition;
 };
+
+
+namespace cat {
+
+    enum States {
+        IDLE,
+        WALKING,
+        ATTACKING,
+        STATE_COUNT
+    };
+
+    enum Animations {
+        ANIM_IDLE,
+        ANIM_WALKING,
+        ANIM_COUNT
+    };
+}
 
 typedef std::vector<GameObject> Tables;
