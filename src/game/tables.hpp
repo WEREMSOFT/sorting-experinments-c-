@@ -11,7 +11,6 @@
 
 enum Screens {
     TITLE,
-    GAME_TILE,
     GAME
 };
 
@@ -21,8 +20,7 @@ enum Entities {
     TABLE,
     CAT,
     MOTH,
-    ENTITIES_COUNT,
-    SCI_FI_TILES,
+    ENTITIES_COUNT
 };
 
 enum Flags{

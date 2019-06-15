@@ -28,9 +28,6 @@ int main() {
 
     while (gameIsRunning) {
         switch (context.currentGameScreen) {
-            case Screens::GAME_TILE:
-                game_screen_tile(tables, context);
-                break;
             case Screens::TITLE:
                 title_screen(tables, context);
                 break;
