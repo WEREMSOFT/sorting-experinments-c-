@@ -4,7 +4,8 @@
 #include <vector>
 #include <math.h>
 
-namespace Animation {
+namespace anim {
+
 
     enum AnimationState {
         PLAYING,
@@ -25,28 +26,30 @@ namespace Animation {
         }
     };
 
+    typedef std::vector<Struct> AnimationVector;
+
     namespace utils {
 
-        typedef std::vector<Animation::Struct> Animations;
+        typedef std::vector<anim::Struct> Animations;
         typedef std::vector<sf::Texture> Textures;
         typedef std::vector<sf::FloatRect> TextureRects;
 
-        void animation_play(Animation::Struct &anim) {
+        void animation_play(anim::Struct &anim) {
             anim.state = AnimationState::PLAYING;
         }
 
-        void stopAnimation(Animation::Struct& anim) {
+        void stopAnimation(anim::Struct& anim) {
             anim.state = AnimationState::STOPED;
         }
 
-        void animation_goto_frame(Animation::Struct &anim, int frame) {
+        void animation_goto_frame(anim::Struct &anim, int frame) {
             anim.textureRect.left = anim.frameSize.left + anim.frameSize.width * (int)anim.frame;
             anim.textureRect.top = anim.frameSize.top;
             anim.textureRect.width = anim.frameSize.width;
             anim.textureRect.height = anim.frameSize.height;
         }
 
-        void animation_process_frame(Animation::Struct &anim, const float delta) {
+        void animation_process_frame(anim::Struct &anim, const float delta) {
             if (anim.state == AnimationState::PLAYING) {
                 anim.frame += anim.framesPerSeccond * delta;
 
@@ -58,11 +61,11 @@ namespace Animation {
                 }
             }
 
-            Animation::utils::animation_goto_frame(anim, int(anim.frame));
+            anim::utils::animation_goto_frame(anim, int(anim.frame));
         }
 
 
-        void animation_goto_and_stop(Animation::Struct &anim, int frame) {
+        void animation_goto_and_stop(anim::Struct &anim, int frame) {
             stopAnimation(anim);
             anim.frame = (anim.frame > anim.maxFrames) ? anim.maxFrames : anim.frame;
             anim.frame = frame;

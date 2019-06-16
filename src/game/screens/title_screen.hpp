@@ -30,7 +30,7 @@ void title_screen(Context &context) {
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
-            context.currentGameScreen = Screens::GAME;
+            context.currentGameScreen = Screens::FIGHT;
         }
 
         sf::IntRect textureRect = backGround.getTextureRect();

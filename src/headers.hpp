@@ -11,12 +11,15 @@
 #include "game/tables.hpp"
 #include "core/debug/fps_counter.hpp"
 #include "game/characters/cat.hpp"
+#include "game/characters/little_mac.hpp"
+#include "game/characters/henchman.hpp"
 #include <functional>
 #include <mutex>
 
 // screens
 #include "core/resources/animation.hpp"
 #include "game/screens/game_screen.hpp"
+#include "game/screens/fight_screen.hpp"
 #include "game/screens/loading_screen.hpp"
 #include "game/screens/game_screen.hpp"
 #include "game/screens/title_screen.hpp"

@@ -13,6 +13,9 @@ namespace Textures{
         MOTH,
         TITLE_MAIN_IMAGE,
         CAT_1_ANIMATION,
+        LITTLE_MAC,
+        BACKGROUND_FIGHT,
+        HENCHMAN,
         TEXTURE_COUNT
     };
 }

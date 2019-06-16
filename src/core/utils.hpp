@@ -65,7 +65,7 @@ void entity_center_on_screen(Tables &tables, uint id, sf::RenderWindow &window) 
 }
 
 void entity_handle_animation(Tables &tables, uint id, float dt) {
-    Animation::utils::animation_process_frame(tables[id].animation, dt);
+    anim::utils::animation_process_frame(tables[id].animation, dt);
 }
 
 void entity_move(Tables &tables, const int id, const sf::Vector2f &moveVector) {
@@ -106,9 +106,9 @@ void entity_set_position(Tables &tables, int id, const sf::Vector2f &moveVector)
 void entity_set_scale_based_on_flipped_flag(Tables& tables){
     for (int i = 0; i < tables.size(); i++) {
         if (tables[i].flags & Flags::FLIPPED) {
-            tables[i].sprite.setScale(-1, tables[i].sprite.getScale().y);
+            tables[i].sprite.setScale(fabs(tables[i].sprite.getScale().x) * -1, tables[i].sprite.getScale().y);
         } else {
-            tables[i].sprite.setScale(1, tables[i].sprite.getScale().y);
+            tables[i].sprite.setScale(fabs(tables[i].sprite.getScale().x), tables[i].sprite.getScale().y);
         }
     }
 }
@@ -123,11 +123,6 @@ void entity_set_zindex_equals_y(Tables &tables) {
         tables[i].zIndex = tables[i].sprite.getPosition().y;
     }
 }
-
-// ## CAT
-
-typedef std::vector<Animation::Struct> AnimationVector;
-
 
 void draw(std::vector<GameObject> &tables, Context &context, int begin, int end) {
     for (int i = begin; i < end; i++) {
@@ -144,9 +139,10 @@ void print_zindex(Tables &tables, int id) {
     printf("Z-Index %d\n", tables[id].zIndex);
 }
 
-void process_animations(Tables &tables, int firstAnimated) {
+void process_animations(Tables &tables, int firstAnimated, float dt) {
     {
         for (int i = firstAnimated; i < tables.size(); i++) {
+            entity_handle_animation(tables, i, dt);
             tables[i].sprite.setTextureRect(tables[i].animation.textureRect);
         }
     }
@@ -176,32 +172,5 @@ void text_center_on_screen(sf::Text &text, sf::RenderWindow &window) {
 void text_center_origin(sf::Text &text) {
     sf::FloatRect bounds{text.getLocalBounds()};
     text.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
-}
-
-void tile_keyboard_event_handler(Tables &tables, int id) {
-    tables[id].lastPosition = tables[id].sprite.getPosition();
-    int thingySpeed = 128;
-
-    static int lastStatusKeys[sf::Keyboard::KeyCount] = {0};
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !lastStatusKeys[sf::Keyboard::Left]) {
-        entity_move(tables, id, sf::Vector2f(-thingySpeed, 0));
-        tables[id].flags &= ~Flags::FLIPPED;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && !lastStatusKeys[sf::Keyboard::Right]) {
-        entity_move(tables, id, sf::Vector2f(thingySpeed, 0));
-        tables[id].flags |= Flags::FLIPPED;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !lastStatusKeys[sf::Keyboard::Up]) {
-        entity_move(tables, id, sf::Vector2f(0, -thingySpeed));
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !lastStatusKeys[sf::Keyboard::Down]) {
-        entity_move(tables, id, sf::Vector2f(0, thingySpeed));
-    }
-
-    lastStatusKeys[sf::Keyboard::Left] = sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
-    lastStatusKeys[sf::Keyboard::Right] = sf::Keyboard::isKeyPressed(sf::Keyboard::Right);
-    lastStatusKeys[sf::Keyboard::Up] = sf::Keyboard::isKeyPressed(sf::Keyboard::Up);
-    lastStatusKeys[sf::Keyboard::Down] = sf::Keyboard::isKeyPressed(sf::Keyboard::Down);
 }
 

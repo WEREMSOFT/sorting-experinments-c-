@@ -26,6 +26,8 @@ namespace screen_house {
 
         Tables tables(ENTITIES_COUNT);
 
+        printf("Space in memory %lu\n", sizeof(tables) + 24);
+
         entity_set_type_equals_index(tables);
 
         sf::RenderWindow &window = *context.window;
@@ -41,7 +43,7 @@ namespace screen_house {
 
         entity_set_animated(tables, Entities::CAT);
 
-        AnimationVector cat_animations(cat::Animations::ANIM_COUNT);
+        anim::AnimationVector cat_animations(cat::Animations::ANIM_COUNT);
         cat::animations_init(cat_animations, context);
         cat::state_to_idle(tables, Entities::CAT, cat_animations);
 
@@ -85,7 +87,7 @@ namespace screen_house {
 
             {
                 int firstAnimated = sort_by_animated(tables);
-                process_animations(tables, firstAnimated);
+                process_animations(tables, firstAnimated, dt);
             }
 
             sort_by_z_index(tables);

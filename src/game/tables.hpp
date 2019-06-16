@@ -11,7 +11,9 @@
 
 enum Screens {
     TITLE,
-    GAME
+    FIGHT,
+    GAME,
+    SCREEN_COUNT,
 };
 
 enum Flags{
@@ -71,26 +73,9 @@ struct GameObject {
     int parent = -1;
     Fonts::ID fontsID;
     sf::Transform worldTransform;
-    Animation::Struct animation;
+    anim::Struct animation;
     sf::Sprite sprite;
     sf::Vector2f lastPosition;
 };
-
-
-namespace cat {
-
-    enum States {
-        IDLE,
-        WALKING,
-        ATTACKING,
-        STATE_COUNT
-    };
-
-    enum Animations {
-        ANIM_IDLE,
-        ANIM_WALKING,
-        ANIM_COUNT
-    };
-}
 
 typedef std::vector<GameObject> Tables;

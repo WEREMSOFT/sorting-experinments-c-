@@ -95,6 +95,12 @@ namespace LoadScreen {
                                             "../assets/images/sci-fi-tile.png");
             loadScreen.threads.emplace_back(loadScreen.loadTexture, Textures::MOTH,
                                             "../assets/images/characters/moth_single.png");
+            loadScreen.threads.emplace_back(loadScreen.loadTexture, Textures::LITTLE_MAC,
+                                            "../assets/images/characters/little_mac.png");
+            loadScreen.threads.emplace_back(loadScreen.loadTexture, Textures::BACKGROUND_FIGHT,
+                                            "../assets/images/background_fight.png");
+            loadScreen.threads.emplace_back(loadScreen.loadTexture, Textures::HENCHMAN,
+                                            "../assets/images/henchman.png");
 
 
 
