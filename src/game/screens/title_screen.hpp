@@ -5,7 +5,7 @@
 #pragma once
 
 
-void title_screen(Tables &tables, Context &context) {
+void title_screen(Context &context) {
     sf::RenderWindow &window = *context.window;
     sf::Event event;
     sf::Clock clock;

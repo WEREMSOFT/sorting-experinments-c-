@@ -19,7 +19,15 @@ namespace screen_house {
         tables[id].flags |= Flags::ANIMATED;
     }
 
-    void game_loop(Tables &tables, Context &context) {
+    void game_loop(Context &context) {
+
+        // Metrics
+        float averageRunningTime = 0;
+
+        Tables tables(ENTITIES_COUNT);
+
+        entity_set_type_equals_index(tables);
+
         sf::RenderWindow &window = *context.window;
         sf::Clock clock;
         sf::Time sleepInterval = sf::seconds(.02f);
@@ -81,7 +89,6 @@ namespace screen_house {
             }
 
             sort_by_z_index(tables);
-//            window.clear();
             draw(tables, context, 0, Entities::ENTITIES_COUNT);
 
             FPSCounter::utils::recalculateFPS(fpsCounter);
@@ -93,10 +100,17 @@ namespace screen_house {
             sf::Time elapsedTime = clock.getElapsedTime();
 
             if (elapsedTime.asSeconds() < DELAY_UPDATE) {
+                if(averageRunningTime == 0) averageRunningTime = elapsedTime.asSeconds();
+
+                averageRunningTime = (averageRunningTime + elapsedTime.asSeconds()) / 2;
+
                 sf::sleep(sf::seconds(DELAY_UPDATE));
             }
 
         }
+
+        printf("average running time: %f of an historical lowest of 0.001392 secs\n", averageRunningTime);
+
 
     }
 }

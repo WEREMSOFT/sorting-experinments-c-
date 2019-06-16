@@ -13,23 +13,23 @@ int main() {
     sf::Clock clock;
     TextureHolder textureHolder;
     FontHolder fontHolder;
-    Tables tables(MAX_ENTITIES);
+//    Tables tables(MAX_ENTITIES);
 
-    printf("Space in memory %lu\n", sizeof(tables));
+//    printf("Space in memory %lu\n", sizeof(tables));
 
     Context context(window, textureHolder, fontHolder, Screens::TITLE);
     context = load_screen(context);
 
     // Set entity_type = index for further reference
-    entity_set_type_equals_index(tables);
+//    entity_set_type_equals_index(tables);
 
     while (gameIsRunning) {
         switch (context.currentGameScreen) {
             case Screens::TITLE:
-                title_screen(tables, context);
+                title_screen(context);
                 break;
             case Screens::GAME:
-                screen_house::game_loop(tables, context);
+                screen_house::game_loop(context);
                 break;
         }
     }
