@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/pabloweremczuk/Documents/Proyectos/cpp/microBenchmarks/main.cpp
+iostream
+-
+ctime
+-
+unistd.h
+-
+stdlib.h
+-
+chrono
+-
+vector
+-
+functional
+-
+algorithm
+-
+
