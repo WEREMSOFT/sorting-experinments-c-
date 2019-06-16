@@ -5,58 +5,55 @@
 #include <chrono>
 #include <vector>
 #include <functional>
-#include <algorithm>
 
+#define VECTOR_SIZE 100000
 
 using namespace std;
 
-int compare(const int a, const int b) { return a > b; }
-int compare_array(const void *a, const void *b) { return *(int *)b - *(int *)a; }
+void test_vector() {
+        auto c_begin = chrono::steady_clock::now();
 
-
-int main() {
-    const int VECTOR_SIZE = 10000000;
-
-    {
 
         vector<int> intVector(VECTOR_SIZE);
 
-        for(int i = 0; i < VECTOR_SIZE; i++){
-            intVector[i] = i;
-        }
 
-
-        auto c_begin = std::chrono::steady_clock::now();
         int result_a = 0;
 
-        sort(intVector.begin(), intVector.end(), compare);
-
-
-        auto c_end = std::chrono::steady_clock::now();
-        std::chrono::duration<double> diff = c_end - c_begin;
-        printf("elapsed time %f\n", diff.count());
-
-    }
-
-    {
-
-        void* memory = malloc(sizeof(int) * VECTOR_SIZE);
-
-        int* intArray = (int*)memory;
-
         for(int i = 0; i < VECTOR_SIZE; i++){
-            intArray[i] = i;
+            result_a += intVector[i];
         }
 
-        auto c_begin = std::chrono::steady_clock::now();
+        auto c_end = chrono::steady_clock::now();
+        chrono::duration<double> diff = c_end - c_begin;
+        printf("elapsed time %f\n", diff.count());
+    }
 
-        qsort(intArray, VECTOR_SIZE, sizeof(int), compare_array);
+void test_array() {
+        auto c_begin = chrono::steady_clock::now();
 
-        auto c_end = std::chrono::steady_clock::now();
-        std::chrono::duration<double> diff = c_end - c_begin;
+        int* intArray = (int *)malloc(sizeof(int) * VECTOR_SIZE);
+
+        int result_a = 0;
+
+        for(int i = 0; i < VECTOR_SIZE; i++){
+            result_a += intArray[i];
+        }
+
+
+
+        auto c_end = chrono::steady_clock::now();
+        chrono::duration<double> diff = c_end - c_begin;
         printf("elapsed time %f\n", diff.count());
 
-        free(memory);
+        free(intArray);
+    }
+
+int main() {
+
+    for(int i = 0; i < 100; i++){
+        test_vector();
+        test_array();
+        printf("#######################\n");
     }
 
 
