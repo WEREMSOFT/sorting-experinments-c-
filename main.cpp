@@ -7,6 +7,7 @@
 #include <functional>
 #include <algorithm>
 
+#define VECTOR_SIZE 1000
 
 using namespace std;
 
@@ -14,10 +15,7 @@ int compare(const int a, const int b) { return a > b; }
 int compare_array(const void *a, const void *b) { return *(int *)b - *(int *)a; }
 
 
-int main() {
-    const int VECTOR_SIZE = 10000000;
-
-    {
+void test_vector() {
 
         vector<int> intVector(VECTOR_SIZE);
 
@@ -26,19 +24,19 @@ int main() {
         }
 
 
-        auto c_begin = std::chrono::steady_clock::now();
+        auto c_begin = chrono::steady_clock::now();
         int result_a = 0;
 
         sort(intVector.begin(), intVector.end(), compare);
 
 
-        auto c_end = std::chrono::steady_clock::now();
-        std::chrono::duration<double> diff = c_end - c_begin;
-        printf("elapsed time %f\n", diff.count());
+        auto c_end = chrono::steady_clock::now();
+        chrono::duration<double> diff = c_end - c_begin;
+        printf("std::sort elapsed time %f\n", diff.count());
 
     }
 
-    {
+void test_array() {
 
         void* memory = malloc(sizeof(int) * VECTOR_SIZE);
 
@@ -48,15 +46,23 @@ int main() {
             intArray[i] = i;
         }
 
-        auto c_begin = std::chrono::steady_clock::now();
+        auto c_begin = chrono::steady_clock::now();
 
         qsort(intArray, VECTOR_SIZE, sizeof(int), compare_array);
 
-        auto c_end = std::chrono::steady_clock::now();
-        std::chrono::duration<double> diff = c_end - c_begin;
-        printf("elapsed time %f\n", diff.count());
+        auto c_end = chrono::steady_clock::now();
+        chrono::duration<double> diff = c_end - c_begin;
+        printf("qsort elapsed time.....%f\n", diff.count());
 
         free(memory);
+    }
+
+int main() {
+
+    for(int i = 0; i < 1000; i++){
+        test_vector();
+        test_array();
+        printf("#############\n");
     }
 
 
