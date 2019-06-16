@@ -14,9 +14,9 @@ inline int sort_by_dirty(Tables &tables) {
         return ((a.flags & Flags::DIRTY) < (b.flags & Flags::DIRTY));
     };
 
-    std::sort(tables.begin(), tables.begin() + Entities::ENTITIES_COUNT, compareLambda);
+    std::sort(tables.begin(), tables.end(), compareLambda);
 
-    for (int i = 0; i < ENTITIES_COUNT; i++) {
+    for (int i = 0; i < tables.size(); i++) {
         if (tables[i].flags & Flags::DIRTY) return i;
     }
     return 0;
@@ -27,9 +27,9 @@ int sort_by_animated(Tables &tables) {
         return ((a.flags & Flags::ANIMATED) < (b.flags & Flags::ANIMATED));
     };
 
-    std::sort(tables.begin(), tables.begin() + Entities::ENTITIES_COUNT, compareLambda);
+    std::sort(tables.begin(), tables.end(), compareLambda);
 
-    for (int i = 0; i < ENTITIES_COUNT; i++) {
+    for (int i = 0; i < tables.size(); i++) {
         if (tables[i].flags & Flags::ANIMATED) return i;
     }
     return 0;
@@ -85,7 +85,7 @@ void entity_recalculate_world_transform(Tables &tables, int id) {
 }
 
 void entity_recalculate_world_transforms(Tables &tables) {
-    for (int i = 0; i < Entities::ENTITIES_COUNT; i++) {
+    for (int i = 0; i < tables.size(); i++) {
         entity_recalculate_world_transform(tables, i);
     }
 }
@@ -104,7 +104,7 @@ void entity_set_position(Tables &tables, int id, const sf::Vector2f &moveVector)
 }
 
 void entity_set_scale_based_on_flipped_flag(Tables& tables){
-    for (int i = 0; i < Entities::ENTITIES_COUNT; i++) {
+    for (int i = 0; i < tables.size(); i++) {
         if (tables[i].flags & Flags::FLIPPED) {
             tables[i].sprite.setScale(-1, tables[i].sprite.getScale().y);
         } else {
@@ -113,13 +113,13 @@ void entity_set_scale_based_on_flipped_flag(Tables& tables){
     }
 }
 void entity_set_type_equals_index(Tables &tables) {
-    for (int i = 0; i < Entities::ENTITIES_COUNT; i++) {
+    for (int i = 0; i < tables.size(); i++) {
         tables[i].entity_type = i;
     }
 }
 
 void entity_set_zindex_equals_y(Tables &tables) {
-    for (int i = 0; i < Entities::ENTITIES_COUNT; i++) {
+    for (int i = 0; i < tables.size(); i++) {
         tables[i].zIndex = tables[i].sprite.getPosition().y;
     }
 }
@@ -128,62 +128,6 @@ void entity_set_zindex_equals_y(Tables &tables) {
 
 typedef std::vector<Animation::Struct> AnimationVector;
 
-void cat_animations_init(AnimationVector &animations, Context &context) {
-    animations[cat::Animations::ANIM_IDLE].maxFrames = 5;
-    animations[cat::Animations::ANIM_IDLE].frameSize = {0, 26, 135, 154};
-    animations[cat::Animations::ANIM_IDLE].framesPerSeccond = 10;
-    animations[cat::Animations::ANIM_IDLE].centered = true;
-    animations[cat::Animations::ANIM_IDLE].state = Animation::AnimationState::PLAYING;
-
-    animations[cat::Animations::ANIM_WALKING].maxFrames = 8;
-    animations[cat::Animations::ANIM_WALKING].frameSize = {0, 767, 148, 193};
-    animations[cat::Animations::ANIM_WALKING].framesPerSeccond = 8;
-    animations[cat::Animations::ANIM_WALKING].centered = true;
-    animations[cat::Animations::ANIM_WALKING].state = Animation::AnimationState::PLAYING;
-}
-
-void cat_keyboard_event_handler(Tables &tables, int id, float dt) {
-    const float thingySpeed = 500;
-    tables[id].lastPosition = tables[id].sprite.getPosition();
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-        entity_move(tables, id, sf::Vector2f(-thingySpeed * dt, 0));
-        tables[id].flags &= ~Flags::FLIPPED;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-        entity_move(tables, id, sf::Vector2f(thingySpeed * dt, 0));
-        tables[id].flags |= Flags::FLIPPED;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-        entity_move(tables, id, sf::Vector2f(0, -thingySpeed * dt));
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-        entity_move(tables, id, sf::Vector2f(0, thingySpeed * dt));
-    }
-}
-
-void cat_state_to_idle(Tables &tables, int id, AnimationVector &animations) {
-    tables[id].state = cat::States::IDLE;
-    tables[id].animation = animations[cat::Animations::ANIM_IDLE];
-    tables[id].sprite.setOrigin(tables[id].animation.frameSize.width / 2, 0.0);
-}
-
-void cat_state_to_walking(Tables &tables, int id, AnimationVector &animations) {
-    tables[id].state = cat::States::WALKING;
-    tables[id].animation = animations[cat::Animations::ANIM_WALKING];
-    tables[id].sprite.setOrigin(tables[id].animation.frameSize.width / 2, 0.0);
-}
-
-void cat_state_process_idle(Tables &tables, int id, AnimationVector &animations) {
-    if (tables[id].lastPosition != tables[id].sprite.getPosition()) {
-        cat_state_to_walking(tables, id, animations);
-    }
-}
-
-void cat_state_process_walking(Tables &tables, int id, AnimationVector &animations) {
-    if (tables[id].lastPosition == tables[id].sprite.getPosition()) {
-        cat_state_to_idle(tables, id, animations);
-    }
-}
 
 void draw(std::vector<GameObject> &tables, Context &context, int begin, int end) {
     for (int i = begin; i < end; i++) {
@@ -202,7 +146,7 @@ void print_zindex(Tables &tables, int id) {
 
 void process_animations(Tables &tables, int firstAnimated) {
     {
-        for (int i = firstAnimated; i < Entities::ENTITIES_COUNT; i++) {
+        for (int i = firstAnimated; i < tables.size(); i++) {
             tables[i].sprite.setTextureRect(tables[i].animation.textureRect);
         }
     }
@@ -213,7 +157,7 @@ void sort_by_entity_type(Tables &tables) {
         return (a.entity_type < b.entity_type);
     };
 
-    std::sort(tables.begin(), tables.begin() + Entities::ENTITIES_COUNT, compareLambda);
+    std::sort(tables.begin(), tables.end(), compareLambda);
 }
 
 void sort_by_z_index(Tables &tables) {
@@ -221,7 +165,7 @@ void sort_by_z_index(Tables &tables) {
         return (a.zIndex < b.zIndex);
     };
 
-    std::sort(tables.begin(), tables.begin() + (int) Entities::ENTITIES_COUNT, compareLambda);
+    std::sort(tables.begin(), tables.end(), compareLambda);
 }
 
 void text_center_on_screen(sf::Text &text, sf::RenderWindow &window) {

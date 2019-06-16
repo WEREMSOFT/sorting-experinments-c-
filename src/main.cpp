@@ -23,16 +23,13 @@ int main() {
     // Set entity_type = index for further reference
     entity_set_type_equals_index(tables);
 
-    tables[Entities::CAT].flags |= Flags::ANIMATED;
-
-
     while (gameIsRunning) {
         switch (context.currentGameScreen) {
             case Screens::TITLE:
                 title_screen(tables, context);
                 break;
             case Screens::GAME:
-                game_screen(tables, context);
+                screen_house::game_loop(tables, context);
                 break;
         }
     }

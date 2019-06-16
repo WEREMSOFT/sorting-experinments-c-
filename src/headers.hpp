@@ -10,6 +10,7 @@
 #include "game/screens/load_screen.hpp"
 #include "game/tables.hpp"
 #include "core/debug/fps_counter.hpp"
+#include "game/characters/cat.hpp"
 #include <functional>
 #include <mutex>
 

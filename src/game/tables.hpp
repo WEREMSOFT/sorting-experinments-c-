@@ -14,20 +14,10 @@ enum Screens {
     GAME
 };
 
-enum Entities {
-    BACKGROUND,
-    HOUSE,
-    TABLE,
-    CAT,
-    MOTH,
-    ENTITIES_COUNT
-};
-
 enum Flags{
     DIRTY = 1,
     ANIMATED = 1 << 1,
     FLIPPED = 1 << 2,
-    VISIBLE = 1 << 3
 };
 
 typedef std::vector<int> IntVect;
