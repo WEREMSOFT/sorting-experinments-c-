@@ -45,7 +45,9 @@ namespace fight_screen {
         entity_center_on_screen(tables, LITTLE_MAC, *context.window);
         entity_center_on_screen(tables, HENCHMAN, *context.window);
 
-        henchman::animations_init(animations[LITTLE_MAC], context);
+        entity_move(tables, HENCHMAN, sf::Vector2f(0, -70.f));
+
+        henchman::animations_init(animations[HENCHMAN], context);
         henchman::state_to_idle(tables, HENCHMAN, animations[HENCHMAN]);
 
         little_mac::animations_init(animations[LITTLE_MAC], context);

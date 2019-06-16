@@ -29,7 +29,7 @@ namespace henchman {
 
         animations[Animations::ANIM_HIT].maxFrames = 1;
         animations[Animations::ANIM_HIT].frameSize = {0, 157, 92, 157};;
-        animations[Animations::ANIM_HIT].framesPerSeccond = 1;
+        animations[Animations::ANIM_HIT].framesPerSeccond = 3;
         animations[Animations::ANIM_HIT].centered = true;
         animations[Animations::ANIM_HIT].looped = false;
         animations[Animations::ANIM_HIT].state = anim::AnimationState::PLAYING;
