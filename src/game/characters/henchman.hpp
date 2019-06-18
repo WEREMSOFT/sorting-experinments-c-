@@ -36,50 +36,50 @@ namespace henchman {
 
     }
 
-    void keyboard_event_handler(Tables &tables, int id, float dt) {
+    void keyboard_event_handler(GameObject& entity, float dt) {
         const float thingySpeed = 500;
-        tables[id].lastPosition = tables[id].sprite.getPosition();
+        entity.lastPosition = entity.sprite.getPosition();
         if (isKeyDown(keys::Left)) {
-            entity_move(tables, id, sf::Vector2f(-thingySpeed * dt, 0));
-            tables[id].flags &= ~Flags::FLIPPED;
+            entity_move(entity, sf::Vector2f(-thingySpeed * dt, 0));
+            entity.flags &= ~Flags::FLIPPED;
         }
         if (isKeyDown(keys::Right)) {
-            entity_move(tables, id, sf::Vector2f(thingySpeed * dt, 0));
-            tables[id].flags |= Flags::FLIPPED;
+            entity_move(entity, sf::Vector2f(thingySpeed * dt, 0));
+            entity.flags |= Flags::FLIPPED;
         }
         if (isKeyDown(keys::Up)) {
-            entity_move(tables, id, sf::Vector2f(0, -thingySpeed * dt));
+            entity_move(entity, sf::Vector2f(0, -thingySpeed * dt));
         }
         if (isKeyDown(keys::Down)) {
-            entity_move(tables, id, sf::Vector2f(0, thingySpeed * dt));
+            entity_move(entity, sf::Vector2f(0, thingySpeed * dt));
         }
     }
 
-    void state_to_idle(Tables &tables, int id, anim::AnimationVector &animations) {
-        tables[id].state = States::IDLE;
-        tables[id].animation = animations[Animations::ANIM_IDLE];
-        tables[id].sprite.setOrigin(tables[id].animation.frameSize.width / 2, 0.0);
+    void state_to_idle(GameObject& henchman, anim::AnimationVector &animations) {
+        henchman.state = States::IDLE;
+        henchman.animation = animations[Animations::ANIM_IDLE];
+        henchman.sprite.setOrigin(henchman.animation.frameSize.width / 2, 0.0);
     }
 
-    void state_to_hit(Tables &tables, int id, anim::AnimationVector &animations) {
-        tables[id].state = States::HIT;
-        tables[id].animation = animations[Animations::ANIM_HIT];
-        tables[id].sprite.setOrigin(tables[id].animation.frameSize.width / 2, 0.0);
+    void state_to_hit(GameObject& entity, anim::AnimationVector &animations) {
+        entity.state = States::HIT;
+        entity.animation = animations[Animations::ANIM_HIT];
+        entity.sprite.setOrigin(entity.animation.frameSize.width / 2, 0.0);
     }
 
-    void state_process_idle(Tables &tables, int id, anim::AnimationVector &animations) {
-        tables[id].flags &= ~Flags::FLIPPED;
+    void state_process_idle(GameObject& henchman, anim::AnimationVector &animations) {
+        henchman.flags &= ~Flags::FLIPPED;
 
         static int keys_state[255] = {0};
 
         if(isKeyDown(keys::Left) && !keys_state[keys::Left]){
             keys_state[keys::Left] = true;
-            state_to_hit(tables, id, animations);
+            state_to_hit(henchman, animations);
         }
 
         if(isKeyDown(keys::Right) && !keys_state[keys::Right]){
-            tables[id].flags |= Flags::FLIPPED;
-            state_to_hit(tables, id, animations);
+            henchman.flags |= Flags::FLIPPED;
+            state_to_hit(henchman, animations);
         }
 
 
@@ -87,20 +87,30 @@ namespace henchman {
         keys_state[keys::Right] = isKeyDown(keys::Right);
     }
 
-    void state_process_hit(Tables &tables, int id, anim::AnimationVector &animations) {
-        if(tables[id].animation.state == anim::STOPED){
-            state_to_idle(tables, id, animations);
+    void state_process_hit(GameObject& henchman, anim::AnimationVector &animations) {
+        if(henchman.animation.state == anim::STOPED){
+            state_to_idle(henchman, animations);
         }
     }
 
-    void handle_states(Tables &tables, int id, anim::AnimationVector &cat_animations){
-        switch (tables[id].state) {
+    void handle_states(GameObject& henchman, anim::AnimationVector &cat_animations){
+        switch (henchman.state) {
             case States::IDLE:
-                state_process_idle(tables, id, cat_animations);
+                state_process_idle(henchman, cat_animations);
                 break;
             case States::HIT:
-                state_process_hit(tables, id, cat_animations);
+                state_process_hit(henchman, cat_animations);
                 break;
         }
+    }
+
+    void create(GameObject& henchman, Context& context, anim::AnimationVector& animations){
+        henchman.sprite.setTexture(context.textureHolder->get(Textures::HENCHMAN));
+        entity_center_on_screen(henchman, *context.window);
+        entity_move(henchman, sf::Vector2f(0, -70.f));
+        henchman::animations_init(animations, context);
+        henchman::state_to_idle(henchman, animations);
+        henchman.sprite.setScale(3, 3);
+        entity_set_animated(henchman);
     }
 }

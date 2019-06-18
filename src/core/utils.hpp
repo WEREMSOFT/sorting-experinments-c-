@@ -60,16 +60,16 @@ unsigned int PRNG(int max) {
 
 // ## ENTITY
 
-void entity_center_on_screen(Tables &tables, uint id, sf::RenderWindow &window) {
-    tables[id].sprite.move(sf::Vector2f(window.getView().getSize().x / 2u, window.getView().getSize().y / 2u));
+void entity_center_on_screen(GameObject& gameObject, sf::RenderWindow &window) {
+    gameObject.sprite.move(sf::Vector2f(window.getView().getSize().x / 2u, window.getView().getSize().y / 2u));
 }
 
 void entity_handle_animation(Tables &tables, uint id, float dt) {
     anim::utils::animation_process_frame(tables[id].animation, dt);
 }
 
-void entity_move(Tables &tables, const int id, const sf::Vector2f &moveVector) {
-    tables[id].sprite.move(moveVector);
+void entity_move(GameObject& entity, const sf::Vector2f &moveVector) {
+    entity.sprite.move(moveVector);
 }
 
 void entity_recalculate_world_transform(Tables &tables, int id) {
@@ -174,3 +174,6 @@ void text_center_origin(sf::Text &text) {
     text.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
 }
 
+void entity_set_animated(GameObject& gameObject) {
+    gameObject.flags |= Flags::ANIMATED;
+}

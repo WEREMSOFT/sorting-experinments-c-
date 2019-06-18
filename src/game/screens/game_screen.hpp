@@ -76,7 +76,7 @@ namespace screen_house {
             }
 
             sort_by_entity_type(tables);
-            cat::keyboard_event_handler(tables, Entities::CAT, dt);
+            cat::keyboard_event_handler(tables[Entities::CAT], dt);
             entity_set_scale_based_on_flipped_flag(tables);
 
             cat::handle_states(tables, Entities::CAT, cat_animations);

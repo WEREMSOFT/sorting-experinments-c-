@@ -34,22 +34,22 @@ namespace cat {
         animations[Animations::ANIM_WALKING].state = anim::AnimationState::PLAYING;
     }
 
-    void keyboard_event_handler(Tables &tables, int id, float dt) {
+    void keyboard_event_handler(GameObject& entity, float dt) {
         const float thingySpeed = 500;
-        tables[id].lastPosition = tables[id].sprite.getPosition();
+        entity.lastPosition = entity.sprite.getPosition();
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-            entity_move(tables, id, sf::Vector2f(-thingySpeed * dt, 0));
-            tables[id].flags &= ~Flags::FLIPPED;
+            entity_move(entity, sf::Vector2f(-thingySpeed * dt, 0));
+            entity.flags &= ~Flags::FLIPPED;
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-            entity_move(tables, id, sf::Vector2f(thingySpeed * dt, 0));
-            tables[id].flags |= Flags::FLIPPED;
+            entity_move(entity, sf::Vector2f(thingySpeed * dt, 0));
+            entity.flags |= Flags::FLIPPED;
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-            entity_move(tables, id, sf::Vector2f(0, -thingySpeed * dt));
+            entity_move(entity, sf::Vector2f(0, -thingySpeed * dt));
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-            entity_move(tables, id, sf::Vector2f(0, thingySpeed * dt));
+            entity_move(entity, sf::Vector2f(0, thingySpeed * dt));
         }
     }
 
@@ -87,4 +87,5 @@ namespace cat {
                 break;
         }
     }
+
 }

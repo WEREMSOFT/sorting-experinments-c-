@@ -35,29 +35,29 @@ namespace little_mac {
         animations[Animations::ANIM_ATTACKING].state = anim::AnimationState::PLAYING;
     }
 
-    void keyboard_event_handler(Tables &tables, int id, float dt) {
+    void keyboard_event_handler(GameObject& entity, float dt) {
         const float thingySpeed = 500;
-        tables[id].lastPosition = tables[id].sprite.getPosition();
+        entity.lastPosition = entity.sprite.getPosition();
         if (isKeyDown(keys::Left)) {
-            entity_move(tables, id, sf::Vector2f(-thingySpeed * dt, 0));
-            tables[id].flags &= ~Flags::FLIPPED;
+            entity_move(entity, sf::Vector2f(-thingySpeed * dt, 0));
+            entity.flags &= ~Flags::FLIPPED;
         }
         if (isKeyDown(keys::Right)) {
-            entity_move(tables, id, sf::Vector2f(thingySpeed * dt, 0));
-            tables[id].flags |= Flags::FLIPPED;
+            entity_move(entity, sf::Vector2f(thingySpeed * dt, 0));
+            entity.flags |= Flags::FLIPPED;
         }
         if (isKeyDown(keys::Up)) {
-            entity_move(tables, id, sf::Vector2f(0, -thingySpeed * dt));
+            entity_move(entity, sf::Vector2f(0, -thingySpeed * dt));
         }
         if (isKeyDown(keys::Down)) {
-            entity_move(tables, id, sf::Vector2f(0, thingySpeed * dt));
+            entity_move(entity, sf::Vector2f(0, thingySpeed * dt));
         }
     }
 
-    void state_to_idle(Tables &tables, int id, anim::AnimationVector &animations) {
-        tables[id].state = States::IDLE;
-        tables[id].animation = animations[Animations::ANIM_IDLE];
-        tables[id].sprite.setOrigin(tables[id].animation.frameSize.width / 2, 0.0);
+    void state_to_idle(GameObject& littleMac, anim::AnimationVector &animations) {
+        littleMac.state = States::IDLE;
+        littleMac.animation = animations[Animations::ANIM_IDLE];
+        littleMac.sprite.setOrigin(littleMac.animation.frameSize.width / 2, 0.0);
     }
 
     void state_to_attacking(Tables &tables, int id, anim::AnimationVector &animations) {
@@ -88,7 +88,7 @@ namespace little_mac {
 
     void state_process_attacking(Tables &tables, int id, anim::AnimationVector &animations) {
         if(tables[id].animation.state == anim::STOPED){
-            state_to_idle(tables, id, animations);
+            state_to_idle(tables[id], animations);
         }
     }
 
@@ -101,5 +101,15 @@ namespace little_mac {
                 state_process_attacking(tables, id, cat_animations);
                 break;
         }
+    }
+
+    void create(GameObject& littleMac, Context& context, anim::AnimationVector& animations) {
+        littleMac.sprite.setTexture(context.textureHolder->get(Textures::LITTLE_MAC));
+        littleMac.sprite.setOrigin(49, 0);
+        entity_center_on_screen(littleMac, *context.window);
+        animations_init(animations, context);
+        state_to_idle(littleMac, animations);
+        littleMac.sprite.setScale(3, 3);
+        entity_set_animated(littleMac);
     }
 }
