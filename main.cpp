@@ -11,10 +11,6 @@
 
 using namespace std;
 
-int compare(const int a, const int b) { return a > b; }
-
-int compare_array(const void *a, const void *b) { return *(int *) b - *(int *) a; }
-
 struct Vector2 {
     int x;
     int y;
@@ -27,6 +23,17 @@ struct Entity {
     Vector2 lastPosition;
     Entity *parent;
 };
+
+
+int compare(Entity a, Entity b) { return a.id > b.id; }
+
+int compare_array(const void *a, const void *b) {
+    return ((Entity*) b)->id - ((Entity*) a)->id;
+}
+
+int compare_handler(const void *a, const void *b) {
+    return ((Entity **) b)[0]->id - ((Entity**) a)[0]->id;
+}
 
 void test_vector() {
 
@@ -41,14 +48,15 @@ void test_vector() {
 
     auto c_begin = chrono::steady_clock::now();
 
-    for (int i = 0; i < VECTOR_SIZE; i++) {
-        intVector[i].id = i;
-        result_a += intVector[i].id;
-    }
+    std::sort(intVector.begin(), intVector.end(), compare);
 
     auto c_end = chrono::steady_clock::now();
     chrono::duration<double> diff = c_end - c_begin;
-    printf("vector elapsed time... %f...%d\n", diff.count(), result_a);
+    printf("vector elapsed time\t%f\n", diff.count(), result_a);
+//    for (int i = 0; i < VECTOR_SIZE; i++) {
+//        printf("vector: %d\n", intVector[i].id);
+//    }
+//    printf("----------\n");
 }
 
 void test_array() {
@@ -65,14 +73,15 @@ void test_array() {
 
     auto c_begin = chrono::steady_clock::now();
 
-    for (int i = 0; i < VECTOR_SIZE; i++) {
-        intArray[i].id = i;
-        result_a += intArray[i].id;
-    }
+    std::qsort(intArray, VECTOR_SIZE, sizeof(Entity), compare_array);
 
     auto c_end = chrono::steady_clock::now();
     chrono::duration<double> diff = c_end - c_begin;
-    printf("array elapsed time.....%f...%d\n", diff.count(), result_a);
+    printf("array elapsed time.\t%f\n", diff.count(), result_a);
+//    for (int i = 0; i < VECTOR_SIZE; i++) {
+//        printf("array: %d\n", intArray[i].id);
+//    }
+//    printf("----------\n");
     free(memory);
 }
 
@@ -84,6 +93,7 @@ void test_handler() {
     Entity* handlers[VECTOR_SIZE];
 
     for (int i = 0; i < VECTOR_SIZE; i++) {
+        intArray[i].id = 660 + i;
         handlers[i] = &intArray[i];
     }
 
@@ -91,14 +101,17 @@ void test_handler() {
 
     auto c_begin = chrono::steady_clock::now();
 
-    for (int i = 0; i < VECTOR_SIZE; i++) {
-        handlers[i]->id = i;
-        result_a += handlers[i]->id;
-    }
+    std::qsort(handlers, VECTOR_SIZE, sizeof(Entity*), compare_handler);
 
     auto c_end = chrono::steady_clock::now();
     chrono::duration<double> diff = c_end - c_begin;
-    printf("handler elapsed time...%f...%d\n", diff.count(), result_a);
+    printf("handler elapsed time\t%f\n", diff.count(), result_a);
+
+//    for (int i = 0; i < VECTOR_SIZE; i++) {
+//        printf("handler: %d\n", handlers[i]->id);
+//    }
+//    printf("----------\n");
+
     free(memory);
 }
 
@@ -108,7 +121,6 @@ int main() {
         test_vector();
         test_array();
         test_handler();
-        printf("#############\n");
     }
 
 
