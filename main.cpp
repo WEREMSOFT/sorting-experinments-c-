@@ -7,7 +7,7 @@
 #include <functional>
 #include <algorithm>
 
-#define VECTOR_SIZE 10000
+#define VECTOR_SIZE 100000
 
 using namespace std;
 
