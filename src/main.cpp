@@ -19,6 +19,9 @@ int main() {
 
     while (gameIsRunning) {
         switch (context.currentGameScreen) {
+            case Screens::TOWN:
+                town_screen::game_loop(context);
+                break;
             case Screens::TITLE:
                 title_screen(context);
                 break;

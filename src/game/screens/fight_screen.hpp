@@ -31,23 +31,12 @@ namespace fight_screen {
     }
 
     void initialize_entities_state(Context &context, Tables &tables, anim::AnimationVector *animations) {
+
         tables[BACKGROUND].sprite.setTexture(context.textureHolder->get(Textures::BACKGROUND_FIGHT));
 
         little_mac::create(tables[LITTLE_MAC], context, animations[LITTLE_MAC]);
         henchman::create(tables[HENCHMAN], context, animations[HENCHMAN]);
 
-//        tables[HENCHMAN].sprite.setTexture(context.textureHolder->get(Textures::HENCHMAN));
-
-//        entity_center_on_screen(tables[HENCHMAN], *context.window);
-
-//        entity_move(tables, HENCHMAN, sf::Vector2f(0, -70.f));
-
-//        henchman::animations_init(animations[HENCHMAN], context);
-//        henchman::state_to_idle(tables, HENCHMAN, animations[HENCHMAN]);
-
-//        tables[HENCHMAN].sprite.setScale(3, 3);
-
-//        entity_set_animated(tables[HENCHMAN]);
     }
 
     void game_loop(Context &context) {
@@ -62,9 +51,6 @@ namespace fight_screen {
         entity_set_type_equals_index(tables);
 
         anim::AnimationVector animations[ENTITIES_COUNT];
-
-        animations[LITTLE_MAC] = anim::AnimationVector(little_mac::ANIM_COUNT);
-        animations[HENCHMAN] = anim::AnimationVector(henchman::ANIM_COUNT);
 
         initialize_entities_state(context, tables, animations);
 

@@ -105,6 +105,7 @@ namespace henchman {
     }
 
     void create(GameObject& henchman, Context& context, anim::AnimationVector& animations){
+        animations.reserve(henchman::ANIM_COUNT);
         henchman.sprite.setTexture(context.textureHolder->get(Textures::HENCHMAN));
         entity_center_on_screen(henchman, *context.window);
         entity_move(henchman, sf::Vector2f(0, -70.f));

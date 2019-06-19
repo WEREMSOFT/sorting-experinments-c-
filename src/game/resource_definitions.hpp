@@ -11,9 +11,11 @@ namespace Textures{
         BACKGROUND,
         MOTH,
         TITLE_MAIN_IMAGE,
+        MENU_SIDE_IMAGE,
         CAT_1_ANIMATION,
         LITTLE_MAC,
         BACKGROUND_FIGHT,
+        BACKGROUND_MENU,
         HENCHMAN,
         TEXTURE_COUNT
     };

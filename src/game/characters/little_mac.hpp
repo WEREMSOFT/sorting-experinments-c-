@@ -104,6 +104,7 @@ namespace little_mac {
     }
 
     void create(GameObject& littleMac, Context& context, anim::AnimationVector& animations) {
+        animations.reserve(little_mac::ANIM_COUNT);
         littleMac.sprite.setTexture(context.textureHolder->get(Textures::LITTLE_MAC));
         littleMac.sprite.setOrigin(49, 0);
         entity_center_on_screen(littleMac, *context.window);

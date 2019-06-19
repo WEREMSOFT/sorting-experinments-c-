@@ -89,6 +89,8 @@ namespace LoadScreen {
                                             "../assets/images/pattern_background.png");
             loadScreen.threads.emplace_back(loadScreen.loadTexture, Textures::TITLE_MAIN_IMAGE,
                                             "../assets/images/title.png");
+            loadScreen.threads.emplace_back(loadScreen.loadTexture, Textures::MENU_SIDE_IMAGE,
+                                            "../assets/images/menu_side_image.png");
             loadScreen.threads.emplace_back(loadScreen.loadTexture, Textures::CAT_1_ANIMATION,
                                             "../assets/images/characters/cat1.png");
             loadScreen.threads.emplace_back(loadScreen.loadTexture, Textures::MOTH,
@@ -97,6 +99,8 @@ namespace LoadScreen {
                                             "../assets/images/characters/little_mac.png");
             loadScreen.threads.emplace_back(loadScreen.loadTexture, Textures::BACKGROUND_FIGHT,
                                             "../assets/images/background_fight.png");
+            loadScreen.threads.emplace_back(loadScreen.loadTexture, Textures::BACKGROUND_MENU,
+                                            "../assets/images/background_menu.png");
             loadScreen.threads.emplace_back(loadScreen.loadTexture, Textures::HENCHMAN,
                                             "../assets/images/characters/henchman.png");
 
