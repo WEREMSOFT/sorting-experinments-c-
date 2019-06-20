@@ -11,7 +11,7 @@
 
 enum Screens {
     TITLE,
-    TOWN,
+    MENU,
     FIGHT,
     GAME,
     SCREEN_COUNT,

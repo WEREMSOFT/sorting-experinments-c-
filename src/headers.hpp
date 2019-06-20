@@ -13,6 +13,7 @@
 #include "game/characters/cat.hpp"
 #include "game/characters/little_mac.hpp"
 #include "game/characters/henchman.hpp"
+#include "game/menu.hpp"
 #include <functional>
 #include <mutex>
 

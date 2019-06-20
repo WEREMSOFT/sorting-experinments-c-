@@ -5,29 +5,34 @@
 
 #pragma once
 
+#include <math.h>
+
 namespace town_screen {
 
-    enum MenuItems {
-        FIGHT,
-        MAIN,
-        MENU_ITEMS_COUNT
-    };
+    void menu_item_callback_go_to_main(int index, Context &context) {
+        printf("Menu selected!!: %d\n", index);
+    }
 
-    void game_loop(Context &context) {
+    void loop(Context &context) {
         sf::RenderWindow &window = *context.window;
         sf::Event event;
         sf::Clock clock;
         sf::Time timeDifference;
         sf::Sprite backGround;
+        menu::Struct menu;
 
-        std::string menuItemsText[MENU_ITEMS_COUNT] = {
-                "GO TO FIGHT!",
-                "GO TO MAIN!"
-        };
+        {
+            std::vector<std::string> menu_items_text = {
+                "OPTION 1",
+                "OPTION 2",
+                "OPTION 3",
+                "OPTION 4",
+                "OPTION 5"
+            };
 
-        std::vector<sf::Text> menuItems(MenuItems::MENU_ITEMS_COUNT);
-
-
+            menu::create(menu, menu_items_text, context);
+            menu.callback = menu_item_callback_go_to_main;
+        }
 
         backGround.setTexture(context.textureHolder->get(Textures::BACKGROUND_MENU));
         backGround.setTextureRect(sf::IntRect(0, 0, window.getSize().x, window.getSize().y));
@@ -46,34 +51,11 @@ namespace town_screen {
         sf::Vector2f finalPositionCharacterRight(700, 100);
         sf::Vector2f finalPositionCharacterLeft(500, 100);
 
-
-        menuItems[MenuItems::FIGHT].setFont(context.fontHolder->get(Fonts::PRESS_START));
-        menuItems[MenuItems::FIGHT].setString(menuItemsText[MenuItems::FIGHT]);
-        menuItems[MenuItems::FIGHT].setCharacterSize(50);
-        text_center_origin(menuItems[MenuItems::FIGHT]);
-        text_center_on_screen(menuItems[MenuItems::FIGHT], *context.window);
-        menuItems[MAIN].move(0, menuItems[FIGHT].getLocalBounds().height * FIGHT);
-
-        menuItems[MenuItems::MAIN].setFont(context.fontHolder->get(Fonts::PRESS_START));
-        menuItems[MenuItems::MAIN].setString(menuItemsText[MenuItems::MAIN]);
-        menuItems[MenuItems::MAIN].setCharacterSize(50);
-        text_center_origin(menuItems[MenuItems::MAIN]);
-        text_center_on_screen(menuItems[MenuItems::MAIN], *context.window);
-        menuItems[MAIN].move(0, menuItems[MAIN].getLocalBounds().height * MAIN);
-
-        sf::RectangleShape menuSelector;
-
-        menuSelector.setSize(sf::Vector2f(menuItems[MenuItems::FIGHT].getLocalBounds().width, menuItems[MenuItems::FIGHT].getLocalBounds().height));
-        menuSelector.setFillColor(sf::Color::Black);
-
-        menuSelector.setOrigin(menuSelector.getSize().x / 2, menuSelector.getSize().y / 2);
-
-        menuSelector.setPosition(menuItems[MenuItems::FIGHT].getPosition().x, menuItems[MenuItems::FIGHT].getPosition().y);
-
-
         static int keys_state[255] = {0};
 
-        while (gameIsRunning && context.currentGameScreen == Screens::TOWN) {
+        const int max_menu_items = menu.items.size();
+
+        while (gameIsRunning && context.currentGameScreen == Screens::MENU) {
             float dt = clock.restart().asSeconds();
             while (window.pollEvent(event)) {
                 if (event.type == sf::Event::Closed) {
@@ -81,8 +63,6 @@ namespace town_screen {
                     gameIsRunning = false;
                 }
             }
-
-
 
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
@@ -94,13 +74,29 @@ namespace town_screen {
             }
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !keys_state[sf::Keyboard::Up]) {
-
-                menuSelector.move(0, -menuSelector.getSize().y);
+                menu.selectedIndex--;
             }
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !keys_state[sf::Keyboard::Down]) {
-                menuSelector.move(0, menuSelector.getSize().y);
+                menu.selectedIndex++;
             }
+
+            menu.selectedIndex = std::min(std::max(menu.selectedIndex, 0), max_menu_items - 1);
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && !keys_state[sf::Keyboard::Enter]) {
+                menu.callback(menu.selectedIndex, context);
+            }
+
+            // Clear outlines on menu
+            for (int i = 0; i < max_menu_items; i++) {
+                menu.items[i].setOutlineThickness(0);
+                menu.items[i].setFillColor(sf::Color::White);
+            }
+
+            menu.items[menu.selectedIndex].setOutlineColor(sf::Color::Black);
+            menu.items[menu.selectedIndex].setOutlineThickness(5);
+            menu.items[menu.selectedIndex].setFillColor(sf::Color::Yellow);
+
 
             sf::Vector2f actualPositionRight = titleImageRight.getPosition();
             actualPositionRight = finalPositionCharacterRight - actualPositionRight;
@@ -109,21 +105,19 @@ namespace town_screen {
             actualPositionLeft = finalPositionCharacterLeft - actualPositionLeft;
 
 
-
-
             titleImageRight.move(actualPositionRight * (dt * 3));
             titleImageLeft.move(actualPositionLeft * (dt * 3));
 
             window.draw(backGround);
             window.draw(titleImageRight);
             window.draw(titleImageLeft);
-            window.draw(menuSelector);
 
             keys_state[keys::Up] = isKeyDown(keys::Up);
             keys_state[keys::Down] = isKeyDown(keys::Down);
+            keys_state[keys::Enter] = isKeyDown(keys::Enter);
 
-            for(int i = 0; i < MENU_ITEMS_COUNT; i++){
-                window.draw(menuItems[i]);
+            for (int i = 0; i < max_menu_items; i++) {
+                window.draw(menu.items[i]);
             }
 
             window.display();

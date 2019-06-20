@@ -19,11 +19,11 @@ int main() {
 
     while (gameIsRunning) {
         switch (context.currentGameScreen) {
-            case Screens::TOWN:
-                town_screen::game_loop(context);
+            case Screens::MENU:
+                town_screen::loop(context);
                 break;
             case Screens::TITLE:
-                title_screen(context);
+                title_screen::loop(context);
                 break;
             case Screens::FIGHT:
                 fight_screen::game_loop(context);
