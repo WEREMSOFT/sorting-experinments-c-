@@ -23,11 +23,11 @@ namespace town_screen {
 
         {
             std::vector<std::string> menu_items_text = {
-                "OPTION 1",
-                "OPTION 2",
-                "OPTION 3",
-                "OPTION 4",
-                "OPTION 5"
+                    "OPTION 1",
+                    "OPTION 2",
+                    "OPTION 3",
+                    "OPTION 4",
+                    "OPTION 5"
             };
 
             menu::create(menu, menu_items_text, context);
@@ -51,7 +51,6 @@ namespace town_screen {
         sf::Vector2f finalPositionCharacterRight(700, 100);
         sf::Vector2f finalPositionCharacterLeft(500, 100);
 
-        static int keys_state[255] = {0};
 
         const int max_menu_items = menu.items.size();
 
@@ -64,39 +63,7 @@ namespace town_screen {
                 }
             }
 
-
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-                gameIsRunning = false;
-            }
-
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
-                context.currentGameScreen = Screens::TITLE;
-            }
-
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !keys_state[sf::Keyboard::Up]) {
-                menu.selectedIndex--;
-            }
-
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !keys_state[sf::Keyboard::Down]) {
-                menu.selectedIndex++;
-            }
-
-            menu.selectedIndex = std::min(std::max(menu.selectedIndex, 0), max_menu_items - 1);
-
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && !keys_state[sf::Keyboard::Enter]) {
-                menu.callback(menu.selectedIndex, context);
-            }
-
-            // Clear outlines on menu
-            for (int i = 0; i < max_menu_items; i++) {
-                menu.items[i].setOutlineThickness(0);
-                menu.items[i].setFillColor(sf::Color::White);
-            }
-
-            menu.items[menu.selectedIndex].setOutlineColor(sf::Color::Black);
-            menu.items[menu.selectedIndex].setOutlineThickness(5);
-            menu.items[menu.selectedIndex].setFillColor(sf::Color::Yellow);
-
+            handle_menu_control(menu, context, max_menu_items);
 
             sf::Vector2f actualPositionRight = titleImageRight.getPosition();
             actualPositionRight = finalPositionCharacterRight - actualPositionRight;
@@ -111,10 +78,6 @@ namespace town_screen {
             window.draw(backGround);
             window.draw(titleImageRight);
             window.draw(titleImageLeft);
-
-            keys_state[keys::Up] = isKeyDown(keys::Up);
-            keys_state[keys::Down] = isKeyDown(keys::Down);
-            keys_state[keys::Enter] = isKeyDown(keys::Enter);
 
             for (int i = 0; i < max_menu_items; i++) {
                 window.draw(menu.items[i]);

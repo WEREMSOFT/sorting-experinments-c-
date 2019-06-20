@@ -58,6 +58,17 @@ unsigned int PRNG(int max) {
     return seed % 32768 % max;
 }
 
+// ## SPRITE
+
+void sprite_center_origin(sf::Sprite &sprite) {
+    sf::FloatRect bounds{sprite.getLocalBounds()};
+    sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+}
+
+void sprite_center_on_screen(sf::Sprite& sprite, sf::RenderWindow &window) {
+    sprite.move(sf::Vector2f(window.getView().getSize().x / 2u, window.getView().getSize().y / 2u));
+}
+
 // ## ENTITY
 
 void entity_center_on_screen(GameObject& gameObject, sf::RenderWindow &window) {
@@ -163,6 +174,8 @@ void sort_by_z_index(Tables &tables) {
 
     std::sort(tables.begin(), tables.end(), compareLambda);
 }
+
+// ## Text
 
 void text_center_on_screen(sf::Text &text, sf::RenderWindow &window) {
     text.setPosition(window.getView().getSize().x / 2u, window.getView().getSize().y / 2u);

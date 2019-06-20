@@ -13,6 +13,7 @@ enum Screens {
     TITLE,
     MENU,
     FIGHT,
+    DIALOG,
     GAME,
     SCREEN_COUNT,
 };

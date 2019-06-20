@@ -31,6 +31,9 @@ int main() {
             case Screens::GAME:
                 screen_house::game_loop(context);
                 break;
+            case Screens::DIALOG:
+                dialog_screen::loop(context);
+                break;
         }
     }
 

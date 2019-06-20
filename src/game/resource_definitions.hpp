@@ -15,8 +15,10 @@ namespace Textures{
         CAT_1_ANIMATION,
         LITTLE_MAC,
         BACKGROUND_FIGHT,
+        BACKGROUND_DIALOG,
         BACKGROUND_MENU,
         HENCHMAN,
+        PANDA,
         TEXTURE_COUNT
     };
 }

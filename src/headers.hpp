@@ -25,3 +25,5 @@
 #include "game/screens/game_screen.hpp"
 #include "game/screens/title_screen.hpp"
 #include "game/screens/town_screen.hpp"
+#include "game/screens/dialog_screen.hpp"
+

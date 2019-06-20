@@ -40,12 +40,13 @@ namespace LoadScreen {
 
         }
 
-        ~Struct(){
+        ~Struct() {
             printf("Destroying loading screen\n");
         }
 
-        Struct(const Struct& other) = delete;
-        Struct(const Struct&& other) = delete;
+        Struct(const Struct &other) = delete;
+
+        Struct(const Struct &&other) = delete;
     };
 
     namespace utils {
@@ -66,7 +67,8 @@ namespace LoadScreen {
             loadScreen.pressSpaceText.move(0.f, 150.f);
 
             loadScreen.progressBarBackgroud.setFillColor(sf::Color::White);
-            loadScreen.progressBarBackgroud.setSize(sf::Vector2f(loadScreen.context.window->getView().getSize().x - 20, 40.f));
+            loadScreen.progressBarBackgroud.setSize(
+                    sf::Vector2f(loadScreen.context.window->getView().getSize().x - 20, 40.f));
             loadScreen.progressBarBackgroud.setPosition(15, loadScreen.loadingText.getPosition().y + 40);
 
             loadScreen.progressBar.setFillColor(sf::Color::Red);
@@ -101,11 +103,12 @@ namespace LoadScreen {
                                             "../assets/images/background_fight.png");
             loadScreen.threads.emplace_back(loadScreen.loadTexture, Textures::BACKGROUND_MENU,
                                             "../assets/images/background_menu.png");
+            loadScreen.threads.emplace_back(loadScreen.loadTexture, Textures::BACKGROUND_DIALOG,
+                                            "../assets/images/background_dialog.png");
             loadScreen.threads.emplace_back(loadScreen.loadTexture, Textures::HENCHMAN,
                                             "../assets/images/characters/henchman.png");
-
-
-
+            loadScreen.threads.emplace_back(loadScreen.loadTexture, Textures::PANDA,
+                                            "../assets/images/characters/panda.png");
 
 
             std::cout << "...assets loaded" << std::endl;
@@ -117,7 +120,7 @@ namespace LoadScreen {
             window.draw(loadScreen.progressBarBackgroud);
             window.draw(loadScreen.progressBar);
 
-            if(loadScreen.finshed){
+            if (loadScreen.finshed) {
                 window.draw(loadScreen.pressSpaceText);
             }
 
@@ -127,7 +130,8 @@ namespace LoadScreen {
         void update(LoadScreen::Struct &loadScreen) {
             loadScreen.percentajeLoaded = (float) loadScreen.resourceConunter / (float) Textures::TEXTURE_COUNT;
             auto substraction = loadScreen.context.window->getView().getSize().x * loadScreen.percentajeLoaded + 30;
-            loadScreen.progressBar.setSize(sf::Vector2f(loadScreen.context.window->getView().getSize().x - substraction, 30));
+            loadScreen.progressBar.setSize(
+                    sf::Vector2f(loadScreen.context.window->getView().getSize().x - substraction, 30));
 
             if (loadScreen.resourceConunter != 0) {
                 loadScreen.percentajeLoaded =
@@ -142,24 +146,22 @@ namespace LoadScreen {
             }
         }
 
-        void run(LoadScreen::Struct& loadScreen){
-            sf::RenderWindow& window = *loadScreen.context.window;
+        void run(LoadScreen::Struct &loadScreen) {
+            sf::RenderWindow &window = *loadScreen.context.window;
             unsigned int loadFinishedAndSpasePressed = false;
-            while (window.isOpen() && !loadFinishedAndSpasePressed)
-            {
+            while (window.isOpen() && !loadFinishedAndSpasePressed) {
                 sf::Event event;
-                while (window.pollEvent(event))
-                {
+                while (window.pollEvent(event)) {
                     if (event.type == sf::Event::Closed)
                         window.close();
                 }
 
-                if(!loadScreen.finshed){
+                if (!loadScreen.finshed) {
                     LoadScreen::utils::update(loadScreen);
                 } else {
-                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
-                        loadFinishedAndSpasePressed = true;
-                    }
+//                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
+                    loadFinishedAndSpasePressed = true;
+//                    }
                 }
                 LoadScreen::utils::draw(window, loadScreen);
             }

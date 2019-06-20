@@ -23,7 +23,8 @@ namespace title_screen {
             std::vector<std::string> menu_items_text = {
                     "Title!!",
                     "Town!!",
-                    "Fight!!"
+                    "Fight!!",
+                    "Dialog"
             };
 
             menu::create(menu, menu_items_text, context);
@@ -84,32 +85,12 @@ namespace title_screen {
                 context.currentGameScreen = Screens::MENU;
             }
 
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !keys_state[sf::Keyboard::Up]) {
-                menu.selectedIndex--;
-            }
-
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !keys_state[sf::Keyboard::Down]) {
-                menu.selectedIndex++;
-            }
-
-            menu.selectedIndex = std::min(std::max(menu.selectedIndex, 0), max_menu_items - 1);
-
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && !keys_state[sf::Keyboard::Enter]) {
-                menu.callback(menu.selectedIndex, context);
-            }
-
-            // Clear outlines on menu
-            for(int i = 0; i < max_menu_items; i++){
-                menu.items[i].setOutlineThickness(0);
-            }
-
-            menu.items[menu.selectedIndex].setOutlineColor(sf::Color::Black);
-            menu.items[menu.selectedIndex].setOutlineThickness(5);
+            menu::handle_menu_control(menu, context, max_menu_items);
 
             sf::IntRect textureRect = backGround.getTextureRect();
 
-            textureRect.left += 200.f * dt;
-            textureRect.top += 80.f * dt;
+            textureRect.left += 200 * dt;
+            textureRect.top += 80 * dt;
 
             backGround.setTextureRect(textureRect);
 
@@ -137,10 +118,6 @@ namespace title_screen {
             }
 
             window.display();
-
-            keys_state[keys::Up] = isKeyDown(keys::Up);
-            keys_state[keys::Down] = isKeyDown(keys::Down);
-            keys_state[keys::Enter] = isKeyDown(keys::Enter);
 
             timeDifference = clock.getElapsedTime();
             if (timeDifference.asSeconds() < DELAY_FRAME) {
