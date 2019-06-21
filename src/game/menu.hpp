@@ -12,14 +12,14 @@ namespace menu {
         void (* callback)(int, Context&) ;
     };
 
-    void create(menu::Struct& menu, std::vector<std::string>& menuItems, Context& context, sf::Vector2f offset = {0, 0}) {
+    void create(menu::Struct& menu, std::vector<std::string>& menuItems, Context& context, sf::Vector2f offset = {0, 0}, int characterSize = 50) {
         menu.items.reserve(menuItems.size());
 
         for(int i = 0; i < menuItems.size(); i++){
             menu.items.emplace_back();
             menu.items[i].setFont(context.fontHolder->get(Fonts::PRESS_START));
             menu.items[i].setString(menuItems[i]);
-            menu.items[i].setCharacterSize(50);
+            menu.items[i].setCharacterSize(characterSize);
             text_center_origin(menu.items[i]);
             text_center_on_screen(menu.items[i], *context.window);
             menu.items[i].move(offset.x, menu.items[0].getLocalBounds().height * i * 1.2 + offset.y);

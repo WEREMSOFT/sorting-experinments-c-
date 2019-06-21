@@ -27,7 +27,7 @@ namespace dialog_screen {
                     "FUCK OFF CARPET FACE!!",
             };
 
-            menu::create(menu, menu_items_text, context, {0, 270});
+            menu::create(menu, menu_items_text, context, {0, 270}, 30);
             menu.callback = menu_item_callback_go_to_main;
         }
 
