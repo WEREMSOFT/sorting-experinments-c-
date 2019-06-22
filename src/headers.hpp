@@ -9,6 +9,7 @@
 #include "game/context.hpp"
 #include "game/screens/load_screen.hpp"
 #include "game/tables.hpp"
+#include "game/dialog.hpp"
 #include "core/debug/fps_counter.hpp"
 #include "game/characters/cat.hpp"
 #include "game/characters/little_mac.hpp"

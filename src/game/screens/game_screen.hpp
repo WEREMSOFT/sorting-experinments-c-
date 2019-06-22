@@ -112,7 +112,7 @@ namespace screen_house {
         }
 
         printf("average running time: %f of an historical lowest of 0.001392 secs\n", averageRunningTime);
-
+        transition_exit(window);
 
     }
 }

@@ -19,17 +19,14 @@ namespace dialog_screen {
         sf::Clock clock;
         sf::Time timeDifference;
         sf::Sprite backGround;
-        menu::Struct menu;
 
-        {
-            std::vector<std::string> menu_items_text = {
-                    "HI CUTIE!!",
-                    "FUCK OFF CARPET FACE!!",
-            };
+        dialog::Struct dialog("");
+        dialog.offsetY = 250;
 
-            menu::create(menu, menu_items_text, context, {0, 270}, 30);
-            menu.callback = menu_item_callback_go_to_main;
-        }
+        dialog.children.push_back(dialog::Struct("Hello 1!"));
+        dialog.children.push_back(dialog::Struct("Hello 2!"));
+        dialog.children.push_back(dialog::Struct("Hello 3!"));
+        dialog.children.push_back(dialog::Struct("Hello 4!"));
 
         backGround.setTexture(context.textureHolder->get(Textures::BACKGROUND_DIALOG));
         backGround.setTextureRect(sf::IntRect(0, 0, window.getSize().x, window.getSize().y));
@@ -49,8 +46,6 @@ namespace dialog_screen {
         textBackground.setFillColor(sf::Color(0, 0, 0, 128));
         textBackground.move(0, 600);
 
-        const int max_menu_items = menu.items.size();
-
         while (gameIsRunning && context.currentGameScreen == Screens::DIALOG) {
             float dt = clock.restart().asSeconds();
             while (window.pollEvent(event)) {
@@ -60,7 +55,13 @@ namespace dialog_screen {
                 }
             }
 
-            handle_menu_control(menu, context, max_menu_items);
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+                gameIsRunning = false;
+            }
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
+                context.currentGameScreen = Screens::TITLE;
+            }
 
             sf::Vector2f actualPositionLeft = panda.getPosition();
             actualPositionLeft = finalPositionPanda - actualPositionLeft;
@@ -70,16 +71,17 @@ namespace dialog_screen {
             window.draw(panda);
 
             window.draw(textBackground);
-            for (int i = 0; i < max_menu_items; i++) {
-                window.draw(menu.items[i]);
-            }
+
+            dialog::draw(dialog, window, context.fontHolder->get(Fonts::PRESS_START));
 
             window.display();
+
             timeDifference = clock.getElapsedTime();
             if (timeDifference.asSeconds() < DELAY_FRAME) {
                 sf::sleep(sf::seconds(DELAY_FRAME - timeDifference.asSeconds()));
             }
         }
+        transition_exit(window);
     }
 }
 

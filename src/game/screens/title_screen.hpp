@@ -124,6 +124,8 @@ namespace title_screen {
                 sf::sleep(sf::seconds(DELAY_FRAME - timeDifference.asSeconds()));
             }
         }
+
+        transition_exit(window);
     }
 }
 

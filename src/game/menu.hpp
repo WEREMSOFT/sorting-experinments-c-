@@ -30,14 +30,6 @@ namespace menu {
     void handle_menu_control(menu::Struct &menu, Context &context, const int& max_menu_items) {
         static int keys_state[255] = {0};
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-            gameIsRunning = false;
-        }
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
-            context.currentGameScreen = Screens::TITLE;
-        }
-
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !keys_state[sf::Keyboard::Up]) {
             menu.selectedIndex--;
         }

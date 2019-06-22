@@ -190,3 +190,68 @@ void text_center_origin(sf::Text &text) {
 void entity_set_animated(GameObject& gameObject) {
     gameObject.flags |= Flags::ANIMATED;
 }
+
+// ## TRANSITIONS
+
+void transition_exit(sf::RenderWindow &window) {
+    sf::Clock clock;
+    sf::Time timeDifference;
+    sf::RectangleShape shade_up;
+    sf::RectangleShape shade_down;
+
+    bool shade_is_open = true;
+
+    sf::Texture texture;
+    texture.create(window.getDefaultView().getSize().x, window.getDefaultView().getSize().y);
+
+    texture.update(window);
+
+    sf::Sprite background;
+    background.setTexture(texture);
+
+    sf::Vector2f size_screen = sf::Vector2f(window.getDefaultView().getSize());
+
+    shade_up.setSize(size_screen);
+    shade_down.setSize(size_screen);
+
+    shade_up.setFillColor(sf::Color::Black);
+    shade_down.setFillColor(sf::Color::Black);
+
+    shade_up.move(0, -shade_up.getSize().y);
+    shade_down.move(0, window.getDefaultView().getSize().y);
+
+    const int shade_speed = 1000;
+
+    sf::Event event;
+    while(gameIsRunning && shade_is_open){
+        float dt = clock.restart().asSeconds();
+        while (window.pollEvent(event)){
+            if(event.type == sf::Event::Closed){
+                window.close();
+            }
+        }
+
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
+            gameIsRunning = false;
+        }
+
+        shade_down.move(0, -shade_speed * dt);
+        shade_up.move(0, shade_speed * dt);
+
+        if( shade_down.getPosition().y <= size_screen.y / 2 ){
+            shade_is_open = false;
+        }
+
+        window.draw(background);
+        window.draw(shade_up);
+        window.draw(shade_down);
+        window.display();
+
+        timeDifference = clock.getElapsedTime();
+        if (timeDifference.asSeconds() < DELAY_FRAME) {
+            sf::sleep(sf::seconds(DELAY_FRAME - timeDifference.asSeconds()));
+        }
+    }
+
+
+}

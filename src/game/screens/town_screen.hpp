@@ -63,6 +63,14 @@ namespace town_screen {
                 }
             }
 
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+                gameIsRunning = false;
+            }
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
+                context.currentGameScreen = Screens::TITLE;
+            }
+
             handle_menu_control(menu, context, max_menu_items);
 
             sf::Vector2f actualPositionRight = titleImageRight.getPosition();
@@ -89,6 +97,7 @@ namespace town_screen {
                 sf::sleep(sf::seconds(DELAY_FRAME - timeDifference.asSeconds()));
             }
         }
+        transition_exit(window);
     }
 }
 
