@@ -12,17 +12,6 @@ else()
 endif()
 file(COPY assets DESTINATION ./)
 
-add_executable(SFMLDODGame
-        src/main.cpp
-        src/core/debug/fps_counter.hpp
-        src/core/resources/resource_holder.hpp
-        src/game/resource_definitions.hpp
-        src/game/screens/load_screen.hpp
-        src/game/context.hpp
-        src/core/utils.hpp
-        src/core/resources/animation.hpp
-        src/game/tables.hpp
-        src/headers.hpp
-        src/game/defines.hpp
-        src/game/screens/loading_screen.hpp
-        src/core/game_object.hpp)
+FILE(GLOB sources src/*)
+
+add_executable(SFMLDODGame ${sources})

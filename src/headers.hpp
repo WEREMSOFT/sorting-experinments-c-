@@ -8,7 +8,10 @@
 #include <SFML/Graphics.hpp>
 #include "game/context.hpp"
 #include "core/game_object.hpp"
+
 #include "game/screens/load_screen.hpp"
+#include "game/screens/main_menu.hpp"
+
 #include "game/tables.hpp"
 #include "core/debug/fps_counter.hpp"
 #include <functional>
