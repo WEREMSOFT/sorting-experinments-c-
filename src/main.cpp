@@ -3,6 +3,12 @@
 
 int main() {
 
+    enum ScreensId {
+        MAIN_MENU,
+        TOWN,
+        SCREEN_COUNT
+    };
+
     sf::RenderWindow window(sf::VideoMode(SCREEN_WITH, SCREEN_HEIGHT), "Purfectly Safe", sf::Style::Default);
     sf::View view;
 
@@ -20,6 +26,8 @@ int main() {
     context = load_screen(context);
 
     MainMenu mainMenu(context);
+
+
 
     sf::Event event;
     float dt = 0;

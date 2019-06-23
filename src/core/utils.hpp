@@ -37,7 +37,7 @@ void sprite_center_on_screen(sf::Sprite& sprite, sf::RenderWindow &window) {
 // ## ENTITY
 
 
-// ## Text
+// ## TextContainer
 
 void text_center_on_screen(sf::Text &text, sf::RenderWindow &window) {
     text.setPosition(window.getView().getSize().x / 2u, window.getView().getSize().y / 2u);

@@ -8,10 +8,12 @@ struct MainMenu: Screen {
     sf::IntRect textureRect;
     GameObject pandaLeft;
     GameObject pandaRight;
+    TextContainer gameName;
 
-    sf::Text introText;
+    MainMenu(Context& context): Screen(context.textureHolder->get(Textures::TITLE_BACKGROUND_TILE), context), gameName(context, "Game Name") {
 
-    MainMenu(Context& context): Screen(context.textureHolder->get(Textures::TITLE_BACKGROUND_TILE), context) {
+        gameName.text.move({0, -150});
+
         context.textureHolder->get(Textures::TITLE_BACKGROUND_TILE).setRepeated(true);
         textureRect.top = 0;
         textureRect.left = 0;
@@ -24,6 +26,8 @@ struct MainMenu: Screen {
 
         addChild(&pandaRight);
         addChild(&pandaLeft);
+
+        addChild(&gameName);
 
         sprite.setTextureRect(textureRect);
         addChild(&shutters);

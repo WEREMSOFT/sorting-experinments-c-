@@ -7,7 +7,9 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "game/context.hpp"
+#include "core/utils.hpp"
 #include "core/game_object.hpp"
+#include "core/text_container.hpp"
 
 #include "game/screens/screen.hpp"
 #include "game/screens/load_screen.hpp"
