@@ -9,6 +9,7 @@
 #include "game/context.hpp"
 #include "core/game_object.hpp"
 
+#include "game/screens/screen.hpp"
 #include "game/screens/load_screen.hpp"
 #include "game/screens/main_menu.hpp"
 
