@@ -7,24 +7,14 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "game/context.hpp"
+#include "core/game_object.hpp"
 #include "game/screens/load_screen.hpp"
 #include "game/tables.hpp"
-#include "game/dialog.hpp"
 #include "core/debug/fps_counter.hpp"
-#include "game/characters/cat.hpp"
-#include "game/characters/little_mac.hpp"
-#include "game/characters/henchman.hpp"
-#include "game/menu.hpp"
 #include <functional>
 #include <mutex>
 
 // screens
-#include "core/resources/animation.hpp"
-#include "game/screens/game_screen.hpp"
-#include "game/screens/fight_screen.hpp"
 #include "game/screens/loading_screen.hpp"
-#include "game/screens/game_screen.hpp"
-#include "game/screens/title_screen.hpp"
-#include "game/screens/town_screen.hpp"
-#include "game/screens/dialog_screen.hpp"
+#include "core/resources/animation.hpp"
 

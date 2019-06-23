@@ -67,17 +67,3 @@ typedef std::vector<Fonts::ID> FontsIDVect;
  */
 
 
-struct GameObject {
-    int entity_type = 0;
-    int state = 0;
-    uint flags = 0;
-    int zIndex = 0;
-    int parent = -1;
-    Fonts::ID fontsID;
-    sf::Transform worldTransform;
-    anim::Struct animation;
-    sf::Sprite sprite;
-    sf::Vector2f lastPosition;
-};
-
-typedef std::vector<GameObject> Tables;
