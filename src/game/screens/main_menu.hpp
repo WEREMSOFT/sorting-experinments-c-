@@ -9,8 +9,9 @@ struct MainMenu: Screen {
     GameObject pandaLeft;
     GameObject pandaRight;
     TextContainer gameName;
+    Menu menu;
 
-    MainMenu(Context& context): Screen(context.textureHolder->get(Textures::TITLE_BACKGROUND_TILE), context), gameName(context, "Game Name") {
+    MainMenu(Context& context): Screen(context.textureHolder->get(Textures::TITLE_BACKGROUND_TILE), context), gameName(context, "Game Name"), menu(context) {
 
         gameName.text.move({0, -150});
 
@@ -39,6 +40,17 @@ struct MainMenu: Screen {
         pandaLeft.sprite.setScale(.35, .35);
 
         pandaRight.sprite.move(context.window->getSize().x, 0);
+
+        std::vector<std::string> menuItems = {
+                "Uno",
+                "Dos",
+                "Tres"
+        };
+
+        menu.setMenuItems(menuItems);
+        menu.callback = onMenuItemSelected;
+
+        addChild(&menu);
     }
 
     void update(float dt) override {
@@ -46,6 +58,12 @@ struct MainMenu: Screen {
         textureRect.top = textureRect.top + 100 * dt;
         textureRect.left = textureRect.left + 150 * dt;
         sprite.setTextureRect(textureRect);
+    }
+
+    static void onMenuItemSelected(Context& context, int itemSelected) {
+        printf("Item selected %d\n", itemSelected);
+        context.currentGameScreen = itemSelected;
+
     }
 };
 

@@ -3,11 +3,7 @@
 
 int main() {
 
-    enum ScreensId {
-        MAIN_MENU,
-        TOWN,
-        SCREEN_COUNT
-    };
+    Screen* screens[SCREEN_COUNT] = {0};
 
     sf::RenderWindow window(sf::VideoMode(SCREEN_WITH, SCREEN_HEIGHT), "Purfectly Safe", sf::Style::Default);
     sf::View view;
@@ -22,12 +18,18 @@ int main() {
     TextureHolder textureHolder;
     FontHolder fontHolder;
 
-    Context context(window, textureHolder, fontHolder, Screens::TITLE);
+    // SEt the initial screen
+    Context context(window, textureHolder, fontHolder, Screens::MAIN_MENU);
     context = load_screen(context);
 
     MainMenu mainMenu(context);
+    Town town(context);
+
+    screens[MAIN_MENU] = &mainMenu;
+    screens[TOWN] = &town;
 
 
+    context.currentGameScreen = MAIN_MENU;
 
     sf::Event event;
     float dt = 0;
@@ -44,10 +46,10 @@ int main() {
             window.close();
         }
 
-        mainMenu.update(dt);
+        screens[context.currentGameScreen]->update(dt);
 
         window.clear();
-        window.draw(mainMenu);
+        window.draw(*screens[context.currentGameScreen]);
         window.display();
 
     }

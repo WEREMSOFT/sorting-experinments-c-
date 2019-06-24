@@ -10,11 +10,8 @@
 #define MAX_ENTITIES 50
 
 enum Screens {
-    TITLE,
-    MENU,
-    FIGHT,
-    DIALOG,
-    GAME,
+    MAIN_MENU,
+    TOWN,
     SCREEN_COUNT,
 };
 

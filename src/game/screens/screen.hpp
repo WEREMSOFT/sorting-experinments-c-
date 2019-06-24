@@ -103,8 +103,9 @@ struct Shutters: GameObject{
 
 struct Screen: GameObject {
     Shutters shutters;
+    Context* context;
 
-    Screen(sf::Texture& texture, Context& context): GameObject(texture), shutters(context){
+    Screen(sf::Texture& texture, Context& pContext): GameObject(texture), shutters(pContext), context(&pContext){
         bool shade_is_closed = true;
 
     }
