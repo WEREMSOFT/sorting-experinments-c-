@@ -11,8 +11,9 @@ struct MainMenu: Screen {
     TextContainer gameName;
     Menu menu;
 
-    MainMenu(Context& context): Screen(context.textureHolder->get(Textures::TITLE_BACKGROUND_TILE), context), gameName(context, "Game Name"), menu(context) {
+    MainMenu(Context& context): Screen(context.textureHolder->get(Textures::TITLE_BACKGROUND_TILE), context), gameName(context, "Game Name"), menu(context, *this) {
 
+        menu.screen = this;
         gameName.text.move({0, -150});
 
         context.textureHolder->get(Textures::TITLE_BACKGROUND_TILE).setRepeated(true);
@@ -25,15 +26,13 @@ struct MainMenu: Screen {
         pandaRight.sprite.setTexture(context.textureHolder->get(Textures::PANDA));
         pandaLeft.sprite.setTexture(context.textureHolder->get(Textures::PANDA));
 
-        addChild(&pandaRight);
-        addChild(&pandaLeft);
+        layers[LAYER_MIDDLE].addChild(&pandaRight);
+        layers[LAYER_MIDDLE].addChild(&pandaLeft);
 
-        addChild(&gameName);
+        layers[LAYER_MIDDLE].addChild(&gameName);
 
         sprite.setTextureRect(textureRect);
-        addChild(&shutters);
-        shutters.passToStateClosed();
-        shutters.passToStateOpenning();
+
 
 
         pandaRight.sprite.setScale(-.35, .35);
@@ -42,27 +41,27 @@ struct MainMenu: Screen {
         pandaRight.sprite.move(context.window->getSize().x, 0);
 
         std::vector<std::string> menuItems = {
-                "Uno",
-                "Dos",
-                "Tres"
+                "Go To Town",
+                "Do Nothing"
         };
 
         menu.setMenuItems(menuItems);
         menu.callback = onMenuItemSelected;
 
-        addChild(&menu);
+        layers[LAYER_MIDDLE].addChild(&menu);
     }
 
     void update(float dt) override {
-        GameObject::update(dt);
+        Screen::update(dt);
         textureRect.top = textureRect.top + 100 * dt;
         textureRect.left = textureRect.left + 150 * dt;
         sprite.setTextureRect(textureRect);
     }
 
-    static void onMenuItemSelected(Context& context, int itemSelected) {
-        printf("Item selected %d\n", itemSelected);
-        context.currentGameScreen = itemSelected;
+    static void onMenuItemSelected(Context& context, Screen& screen, int itemSelected) {
+        if(itemSelected + 1 < SCREEN_COUNT) {
+            screen.passToStateTransitionOut(itemSelected + 1);
+        }
 
     }
 };

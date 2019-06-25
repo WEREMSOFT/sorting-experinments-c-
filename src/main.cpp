@@ -8,7 +8,7 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(SCREEN_WITH, SCREEN_HEIGHT), "Purfectly Safe", sf::Style::Default);
     sf::View view;
 
-    window.setFramerateLimit(30);
+    window.setFramerateLimit(60);
 
     view.setSize(window.getSize().x, window.getSize().y);
     view.setCenter(window.getSize().x/2, window.getSize().y/2);
@@ -18,8 +18,8 @@ int main() {
     TextureHolder textureHolder;
     FontHolder fontHolder;
 
-    // SEt the initial screen
-    Context context(window, textureHolder, fontHolder, Screens::MAIN_MENU);
+    // Set the initial screen
+    Context context(window, textureHolder, fontHolder, MAIN_MENU);
     context = load_screen(context);
 
     MainMenu mainMenu(context);

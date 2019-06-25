@@ -14,9 +14,10 @@ struct Menu: GameObject{
     int characterSize;
     sf::Vector2f offset;
     int selectedIndex = 0;
-    void (* callback)(Context& context, int);
+    void (* callback)(Context&, Screen&, int);
+    Screen* screen;
 
-    Menu(Context& context ,int characterSize = 32, sf::Vector2f offset = {0, 0}): GameObject(), offset(offset), characterSize(characterSize), context(&context) {
+    Menu(Context& context, Screen& containerScreen, int characterSize = 32, sf::Vector2f offset = {0, 0}): GameObject(), offset(offset), characterSize(characterSize), context(&context), screen(&containerScreen) {
     }
 
     void setMenuItems(std::vector<std::string>& menuItems) {
@@ -54,7 +55,7 @@ struct Menu: GameObject{
         selectedIndex = std::min(std::max(selectedIndex, 0), (int)items.size() - 1);
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && !keys_state[sf::Keyboard::Enter]) {
-            callback(*context, selectedIndex);
+            callback(*context, *screen, selectedIndex);
         }
 
         keys_state[keys::Up] = isKeyDown(keys::Up);

@@ -10,7 +10,7 @@ struct Shutters: GameObject{
         SHUTTERS_STATE_COUNT
     };
 
-    const float shade_speed = 200;
+    const float shade_speed = 1000;
     sf::Vector2f size_screen;
 
     sf::RectangleShape shade_up;
@@ -104,9 +104,75 @@ struct Shutters: GameObject{
 struct Screen: GameObject {
     Shutters shutters;
     Context* context;
+    int nextScreen = 0;
+
+    enum Layers {
+        LAYER_BACKGROUND,
+        LAYER_MIDDLE,
+        LAYER_FOREGROUND,
+        LAYER_COUNT
+    };
+
+    GameObject layers[LAYER_COUNT];
+
+    enum States {
+        IDLE,
+        TRANSITION_OUT,
+        TRANSITION_IN
+    };
 
     Screen(sf::Texture& texture, Context& pContext): GameObject(texture), shutters(pContext), context(&pContext){
         bool shade_is_closed = true;
+        addChild(&layers[LAYER_BACKGROUND]);
+        addChild(&layers[LAYER_MIDDLE]);
+        addChild(&layers[LAYER_FOREGROUND]);
 
+        layers[LAYER_FOREGROUND].addChild(&shutters);
+        shutters.passToStateClosed();
+        shutters.passToStateOpenning();
+    }
+
+    void passToStateIdle(){
+        state = IDLE;
+    }
+
+    void passToStateTransitionIn(){
+        shutters.passToStateOpenning();
+        state = TRANSITION_IN;
+
+    }
+
+    void processStateTransitionIn(){
+        if(shutters.state == Shutters::SHUTTERS_OPEN){
+            passToStateIdle();
+        }
+    }
+
+    void passToStateTransitionOut(int pNextScreen){
+        nextScreen = pNextScreen;
+        shutters.passToStateClosing();
+        state = TRANSITION_OUT;
+    }
+
+    void processStateTransitionOut(){
+        if(shutters.state == Shutters::SHUTTERS_CLOSED){
+            passToStateTransitionIn();
+            context->currentGameScreen = nextScreen;
+        }
+    }
+
+    void update(float dt){
+        GameObject::update(dt);
+
+        switch(state){
+            case TRANSITION_IN:
+                processStateTransitionIn();
+                break;
+            case TRANSITION_OUT:
+                processStateTransitionOut();
+                break;
+            case IDLE:
+                break;
+        }
     }
 };

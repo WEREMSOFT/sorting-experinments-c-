@@ -14,7 +14,9 @@ struct GameObject: sf::Drawable, sf::NonCopyable {
         sprite.setTexture(texture);
     }
 
-    GameObject(){}
+    GameObject(){
+        printf("Creating gameobject\n");
+    }
 
     void setPosition(float x, float y){
         sprite.setPosition(x, y);

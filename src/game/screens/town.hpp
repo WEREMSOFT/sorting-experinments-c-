@@ -8,7 +8,7 @@ struct Town: Screen {
     sf::IntRect textureRect;
     Menu menu;
 
-    Town(Context& context): Screen(context.textureHolder->get(Textures::BACKGROUND_FIGHT), context), menu(context, 50) {
+    Town(Context& context): Screen(context.textureHolder->get(Textures::BACKGROUND_FIGHT), context), menu(context, *this, 50) {
 
         context.textureHolder->get(Textures::TITLE_BACKGROUND_TILE).setRepeated(true);
         textureRect.top = 0;
@@ -18,11 +18,6 @@ struct Town: Screen {
         textureRect.width = context.window->getSize().x;
 
         sprite.setTextureRect(textureRect);
-        addChild(&shutters);
-        shutters.passToStateClosed();
-        shutters.passToStateOpenning();
-
-
 
         std::vector<std::string> menuItems = {
                 "OPTION 1",
@@ -33,17 +28,17 @@ struct Town: Screen {
         menu.setMenuItems(menuItems);
         menu.callback = onMenuItemSelected;
 
-        addChild(&menu);
+        layers[LAYER_MIDDLE].addChild(&menu);
     }
 
     void update(float dt) override {
-        GameObject::update(dt);
+        Screen::update(dt);
         if(isKeyDown(keys::BackSpace)) {
-            context->currentGameScreen = MAIN_MENU;
+            passToStateTransitionOut(MAIN_MENU);
         }
     }
 
-    static void onMenuItemSelected(Context& context, int itemSelected) {
+    static void onMenuItemSelected(Context& context, Screen& screen, int itemSelected) {
         printf("Item selected %d\n", itemSelected);
     }
 };
