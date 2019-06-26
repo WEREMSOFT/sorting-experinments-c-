@@ -20,8 +20,8 @@ struct Shutters: GameObject{
     Shutters(Context& context){
         sf::RenderWindow& window = *context.window;
 
-        size_screen.y = window.getDefaultView().getSize().y;
-        size_screen.x = window.getDefaultView().getSize().x;
+        size_screen.y = context.screenSize.y;
+        size_screen.x = context.screenSize.x;
 
         size_screen.y /= 2;
 

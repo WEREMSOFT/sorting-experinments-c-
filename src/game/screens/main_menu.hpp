@@ -20,8 +20,8 @@ struct MainMenu: Screen {
         textureRect.top = 0;
         textureRect.left = 0;
 
-        textureRect.height = context.window->getSize().y;
-        textureRect.width = context.window->getSize().x;
+        textureRect.height = context.screenSize.y;
+        textureRect.width = context.screenSize.x;
 
         pandaRight.sprite.setTexture(context.textureHolder->get(Textures::PANDA));
         pandaLeft.sprite.setTexture(context.textureHolder->get(Textures::PANDA));
@@ -38,7 +38,7 @@ struct MainMenu: Screen {
         pandaRight.sprite.setScale(-.35, .35);
         pandaLeft.sprite.setScale(.35, .35);
 
-        pandaRight.sprite.move(context.window->getSize().x, 0);
+        pandaRight.sprite.move(context.screenSize.x, 0);
 
         std::vector<std::string> menuItems = {
                 "Go To Town",

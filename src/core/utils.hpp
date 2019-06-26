@@ -30,8 +30,8 @@ void sprite_center_origin(sf::Sprite &sprite) {
     sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
 }
 
-void sprite_center_on_screen(sf::Sprite& sprite, sf::RenderWindow &window) {
-    sprite.move(sf::Vector2f(window.getView().getSize().x / 2u, window.getView().getSize().y / 2u));
+void sprite_center_on_screen(sf::Sprite& sprite, sf::Vector2f screenSize) {
+    sprite.move(sf::Vector2f(screenSize.x / 2u, screenSize.y / 2u));
 }
 
 // ## ENTITY
@@ -39,8 +39,8 @@ void sprite_center_on_screen(sf::Sprite& sprite, sf::RenderWindow &window) {
 
 // ## TextContainer
 
-void text_center_on_screen(sf::Text &text, sf::RenderWindow &window) {
-    text.setPosition(window.getView().getSize().x / 2u, window.getView().getSize().y / 2u);
+void text_center_on_screen(sf::Text &text, sf::Vector2f screenSize) {
+    text.setPosition(screenSize.x / 2u, screenSize.y / 2u);
 }
 
 

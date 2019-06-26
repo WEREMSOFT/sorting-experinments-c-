@@ -9,6 +9,7 @@ struct Context {
     TextureHolder *textureHolder;
     FontHolder *fontHolder;
     int currentGameScreen;
+    sf::Vector2f screenSize;
 
     Context(sf::RenderWindow &pWindow,
             TextureHolder &pTextureHolder,

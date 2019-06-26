@@ -16,7 +16,7 @@ struct TextContainer: GameObject {
 
         if(centered){
             text_center_origin(text);
-            text_center_on_screen(text, *context.window);
+            text_center_on_screen(text, context.screenSize);
         }
     }
 

@@ -30,7 +30,7 @@ struct Menu: GameObject{
             items[i].setFont(context->fontHolder->get(Fonts::PRESS_START));
             items[i].setString(menuItems[i]);
             items[i].setCharacterSize(characterSize);
-            text_center_on_screen(items[i], *context->window);
+            text_center_on_screen(items[i], context->screenSize);
             text_center_origin(items[i]);
             items[i].move(offset.x, items[0].getLocalBounds().height * i * 1.2 + offset.y);
             backgroundHeight += items[i].getLocalBounds().height + offset.y;
