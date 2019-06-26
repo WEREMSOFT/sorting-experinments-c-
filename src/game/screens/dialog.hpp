@@ -4,11 +4,13 @@
 
 #pragma once
 
-struct Town: Screen {
+struct Dialog: Screen {
     sf::IntRect textureRect;
     Menu menu;
+    GameObject character;
 
-    Town(Context& context): Screen(context.textureHolder->get(Textures::BACKGROUND_FIGHT), context), menu(context, *this) {
+    Dialog(Context& context): Screen(context.textureHolder->get(Textures::BACKGROUND_DIALOG), context), menu(context, *this) {
+
         menu.offset.y = 250;
         context.textureHolder->get(Textures::TITLE_BACKGROUND_TILE).setRepeated(true);
         textureRect.top = 0;
@@ -21,13 +23,16 @@ struct Town: Screen {
 
         std::vector<std::string> menuItems = {
                 "Go to main menu",
-                "Go to Dialog"
+                "Go to town"
         };
 
         menu.setMenuItems(menuItems);
         menu.callback = onMenuItemSelected;
 
         layers[LAYER_MIDDLE].addChild(&menu);
+        character.sprite.setTexture(context.textureHolder->get(Textures::PANDA));
+        character.sprite.setScale(0.45, 0.45);
+        layers[LAYER_BACKGROUND].addChild(&character);
     }
 
     void update(float dt) override {
@@ -38,15 +43,7 @@ struct Town: Screen {
     }
 
     static void onMenuItemSelected(Screen& screen, int itemSelected) {
-        switch (itemSelected){
-            case 0:
-                screen.passToStateTransitionOut(MAIN_MENU);
-                break;
-            case 1:
-                screen.passToStateTransitionOut(DIALOG);
-                break;
-        }
-
+        screen.passToStateTransitionOut(itemSelected);
     }
 };
 

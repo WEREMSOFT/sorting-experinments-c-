@@ -12,6 +12,7 @@
 enum Screens {
     MAIN_MENU,
     TOWN,
+    DIALOG,
     SCREEN_COUNT,
 };
 

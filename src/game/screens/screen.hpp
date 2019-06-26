@@ -10,7 +10,7 @@ struct Shutters: GameObject{
         SHUTTERS_STATE_COUNT
     };
 
-    const float shade_speed = 1000;
+    const float shade_speed = 4000;
     sf::Vector2f size_screen;
 
     sf::RectangleShape shade_up;

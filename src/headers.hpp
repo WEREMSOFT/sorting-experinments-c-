@@ -16,6 +16,7 @@
 #include "game/screens/load_screen.hpp"
 #include "game/screens/main_menu.hpp"
 #include "game/screens/town.hpp"
+#include "game/screens/dialog.hpp"
 
 
 #include "game/tables.hpp"

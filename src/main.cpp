@@ -24,9 +24,11 @@ int main() {
 
     MainMenu mainMenu(context);
     Town town(context);
+    Dialog dialog(context);
 
     screens[MAIN_MENU] = &mainMenu;
     screens[TOWN] = &town;
+    screens[DIALOG] = &dialog;
 
 
     context.currentGameScreen = MAIN_MENU;

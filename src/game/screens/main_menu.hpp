@@ -12,9 +12,9 @@ struct MainMenu: Screen {
     Menu menu;
 
     MainMenu(Context& context): Screen(context.textureHolder->get(Textures::TITLE_BACKGROUND_TILE), context), gameName(context, "Game Name"), menu(context, *this) {
-
         menu.screen = this;
-        gameName.text.move({0, -150});
+        menu.offset.y = 250;
+        gameName.text.move({0, -250});
 
         context.textureHolder->get(Textures::TITLE_BACKGROUND_TILE).setRepeated(true);
         textureRect.top = 0;
@@ -42,6 +42,7 @@ struct MainMenu: Screen {
 
         std::vector<std::string> menuItems = {
                 "Go To Town",
+                "Go To Dialog",
                 "Do Nothing"
         };
 
@@ -58,7 +59,7 @@ struct MainMenu: Screen {
         sprite.setTextureRect(textureRect);
     }
 
-    static void onMenuItemSelected(Context& context, Screen& screen, int itemSelected) {
+    static void onMenuItemSelected(Screen& screen, int itemSelected) {
         if(itemSelected + 1 < SCREEN_COUNT) {
             screen.passToStateTransitionOut(itemSelected + 1);
         }
