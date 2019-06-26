@@ -68,7 +68,7 @@ namespace LoadScreen {
 
             loadScreen.progressBarBackgroud.setFillColor(sf::Color::White);
             loadScreen.progressBarBackgroud.setSize(
-                    sf::Vector2f(loadScreen.context.window->getView().getSize().x - 20, 40.f));
+                    sf::Vector2f(loadScreen.context.screenSize.x - 20, 40.f));
             loadScreen.progressBarBackgroud.setPosition(15, loadScreen.loadingText.getPosition().y + 40);
 
             loadScreen.progressBar.setFillColor(sf::Color::Red);
@@ -129,9 +129,9 @@ namespace LoadScreen {
 
         void update(LoadScreen::Struct &loadScreen) {
             loadScreen.percentajeLoaded = (float) loadScreen.resourceConunter / (float) Textures::TEXTURE_COUNT;
-            auto substraction = loadScreen.context.window->getView().getSize().x * loadScreen.percentajeLoaded + 30;
+            auto substraction = loadScreen.context.screenSize.x * loadScreen.percentajeLoaded + 30;
             loadScreen.progressBar.setSize(
-                    sf::Vector2f(loadScreen.context.window->getView().getSize().x - substraction, 30));
+                    sf::Vector2f(loadScreen.context.screenSize.x - substraction, 30));
 
             if (loadScreen.resourceConunter != 0) {
                 loadScreen.percentajeLoaded =
@@ -159,9 +159,9 @@ namespace LoadScreen {
                 if (!loadScreen.finshed) {
                     LoadScreen::utils::update(loadScreen);
                 } else {
-//                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
-                    loadFinishedAndSpasePressed = true;
-//                    }
+                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
+                        loadFinishedAndSpasePressed = true;
+                    }
                 }
                 LoadScreen::utils::draw(window, loadScreen);
             }

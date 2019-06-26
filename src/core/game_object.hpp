@@ -15,7 +15,6 @@ struct GameObject: sf::Drawable, sf::NonCopyable {
     }
 
     GameObject(){
-        printf("Creating gameobject\n");
     }
 
     void setPosition(float x, float y){

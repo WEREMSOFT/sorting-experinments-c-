@@ -5,7 +5,7 @@
 #pragma once
 
 struct MainMenu: Screen {
-    sf::IntRect textureRect;
+    sf::FloatRect textureRect;
     GameObject pandaLeft;
     GameObject pandaRight;
     TextContainer gameName;
@@ -31,7 +31,7 @@ struct MainMenu: Screen {
 
         layers[LAYER_MIDDLE].addChild(&gameName);
 
-        sprite.setTextureRect(textureRect);
+        sprite.setTextureRect((sf::IntRect)textureRect);
 
 
 
@@ -56,7 +56,7 @@ struct MainMenu: Screen {
         Screen::update(dt);
         textureRect.top = textureRect.top + 100 * dt;
         textureRect.left = textureRect.left + 150 * dt;
-        sprite.setTextureRect(textureRect);
+        sprite.setTextureRect((sf::IntRect)textureRect);
     }
 
     static void onMenuItemSelected(Screen& screen, int itemSelected) {
