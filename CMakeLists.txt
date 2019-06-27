@@ -4,7 +4,7 @@ project(SFMLDODGame)
 
 set(OPTIMIZATION_FLAGS "")
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    set(CMAKE_CXX_STANDARD 11)
+    set(CMAKE_CXX_STANDARD 14)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OPTIMIZATION_FLAGS} -Wc++17-extensions -framework GLUT -framework sfml-graphics -framework sfml-window -framework sfml-system -v")
 else()
     set(CMAKE_CXX_STANDARD 11)
