@@ -12,6 +12,13 @@ else()
 endif()
 file(COPY assets DESTINATION ./)
 
+
 FILE(GLOB sources src/*)
 
-add_executable(SFMLDODGame ${sources})
+#FILE(GLOB external_includes libs/include/*)
+FILE(GLOB lib_sources libs/src/spine/*)
+#
+#set(HEADER_FILES ${external_includes})
+
+add_executable(SFMLDODGame ${sources} ${lib_sources})
+target_include_directories(SFMLDODGame PRIVATE ./libs/include)

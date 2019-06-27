@@ -11,7 +11,7 @@ int main() {
 
     FPSCounter::utils::initialize(fpsCounter);
 
-    sf::RenderWindow window(sf::VideoMode(SCREEN_WITH, SCREEN_HEIGHT), "Purfectly Safe", sf::Style::Fullscreen);
+    sf::RenderWindow window(sf::VideoMode(SCREEN_WITH, SCREEN_HEIGHT), "Purfectly Safe", sf::Style::Default);
 
     window.setFramerateLimit(60);
 

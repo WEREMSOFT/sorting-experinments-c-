@@ -24,6 +24,8 @@
 #include <functional>
 #include <mutex>
 
+#include <spine/spine.h>
+
 // screens
 #include "game/screens/loading_screen.hpp"
 #include "core/resources/animation.hpp"
