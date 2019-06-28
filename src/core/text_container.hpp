@@ -3,24 +3,73 @@
 //
 #pragma once
 
-struct TextContainer: GameObject {
+struct TextContainer : GameObject {
     sf::Text text;
-    TextContainer(Context& context, std::string pText, int charSize = 50, bool centered = true){
+
+    TextContainer(Context &context, std::string pText, int charSize = 50, sf::Color color = sf::Color::White,
+                  bool centered = true) {
         text.setFont(context.fontHolder->get(Fonts::PRESS_START));
-        text.setFillColor(sf::Color::White);
+        text.setFillColor(color);
         text.setOutlineColor(sf::Color::Black);
-        text.setOutlineThickness(3);
+        text.setOutlineThickness(5);
         text.setCharacterSize(charSize);
         text.setString(pText);
 
 
-        if(centered){
+        if (centered) {
             text_center_origin(text);
             text_center_on_screen(text, context.screenSize);
         }
     }
 
-    void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
+    void draw(sf::RenderTarget &target, sf::RenderStates states) const override {
+        GameObject::draw(target, states);
+        target.draw(text, states);
+    }
+};
+
+struct TextContainerProgressive : GameObject {
+    sf::Text text;
+    std::string textString;
+    float accumulatedElapsedTime = 0;
+    int charCounter = 1;
+
+    TextContainerProgressive(Context &context, std::string pText, int charSize = 50, sf::Color color = sf::Color::White,
+                             bool centered = true) : textString(pText) {
+        text.setFont(context.fontHolder->get(Fonts::PRESS_START));
+        text.setFillColor(color);
+        text.setOutlineColor(sf::Color::Black);
+        text.setOutlineThickness(5);
+        text.setCharacterSize(charSize);
+        text.setLineSpacing(1.5);
+
+        if (centered) {
+            text_center_origin(text);
+            text_center_on_screen(text, context.screenSize);
+        }
+    }
+
+    void update(float dt) override {
+        GameObject::update(dt);
+
+        accumulatedElapsedTime += dt;
+
+        if (accumulatedElapsedTime >= 0.05f) {
+            text.setString(textString.substr(0, charCounter));
+            text_center_origin(text);
+            if (charCounter < textString.size()) {
+                charCounter++;
+            }
+            accumulatedElapsedTime = 0;
+        }
+
+    }
+
+    void reset() {
+        charCounter = 0;
+    }
+
+    void draw(sf::RenderTarget &target, sf::RenderStates states) const override {
         GameObject::draw(target, states);
         target.draw(text, states);
     }

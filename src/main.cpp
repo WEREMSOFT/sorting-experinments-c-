@@ -45,7 +45,7 @@ int main() {
 
     sf::Event event;
     float dt = 0;
-    bool fullscreen = true;
+    bool fullscreen = false;
     while(window.isOpen()){
         dt = clock.restart().asSeconds();
 

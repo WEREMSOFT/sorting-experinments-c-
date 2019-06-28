@@ -7,9 +7,8 @@
 struct Dialog: Screen {
     sf::IntRect textureRect;
     Menu menu;
-    GameObject character;
     std::unique_ptr<SpineGameObject> dragon;
-
+    std::shared_ptr<TextContainerProgressive> dialogText;
 
     Dialog(Context& context): Screen(context.textureHolder->get(Textures::BACKGROUND_DIALOG), context), menu(context, *this) {
         dragon = std::make_unique<SpineGameObject>("assets/spine/dragon/NewDragon.atlas", "assets/spine/dragon/NewDragon.json");
@@ -33,10 +32,12 @@ struct Dialog: Screen {
         menu.callback = onMenuItemSelected;
 
         layers[LAYER_MIDDLE].addChild(&menu);
-        character.sprite.setTexture(context.textureHolder->get(Textures::PANDA));
-        character.sprite.setScale(0.45, 0.45);
 
         layers[LAYER_BACKGROUND].addChild(dragon.get());
+
+        dialogText = std::make_shared<TextContainerProgressive>(context, "Look at me, I'm a DRAGON!!!\n          ARRRH!", 32, sf::Color::Red);
+        dialogText.get()->text.move(150, -200);
+        layers[LAYER_MIDDLE].addChild(dialogText.get());
 
     }
 
@@ -46,6 +47,11 @@ struct Dialog: Screen {
             passToStateTransitionOut(MAIN_MENU);
         }
 
+    }
+
+    virtual void passToStateTransitionIn() override {
+        Screen::passToStateTransitionIn();
+        dialogText.get()->reset();
     }
 
     static void onMenuItemSelected(Screen& screen, int itemSelected) {

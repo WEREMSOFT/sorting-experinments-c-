@@ -136,7 +136,7 @@ struct Screen: GameObject {
         state = IDLE;
     }
 
-    void passToStateTransitionIn(){
+    virtual void passToStateTransitionIn(){
         shutters.passToStateOpenning();
         state = TRANSITION_IN;
 

@@ -19,6 +19,7 @@ namespace Textures{
         BACKGROUND_MENU,
         HENCHMAN,
         PANDA,
+        AGRETSUKO,
         TEXTURE_COUNT
     };
 }
