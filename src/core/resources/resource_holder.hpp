@@ -6,7 +6,9 @@
 
 template <typename Resource, typename Identifier>
 struct ResourceHolder {
+    
     std::map<Identifier, std::unique_ptr<Resource>> resourceMap;
+
     void load(Identifier id, const std::string& filename){
         if(resourceMap.find(id) == resourceMap.end()){
             std::unique_ptr<Resource> resource(new Resource());

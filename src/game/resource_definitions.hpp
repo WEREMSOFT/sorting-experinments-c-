@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../core/resources/resource_holder.hpp"
-
+#include <SFML/Audio.hpp>
 namespace Textures{
     enum ID {
         TITLE_BACKGROUND_TILE,
@@ -25,6 +25,13 @@ namespace Textures{
     };
 }
 
+namespace SoundFX {
+    enum ID {
+        TYPEWRITER,
+        SOUND_COUNT
+    };
+}
+
 namespace Fonts{
     enum ID {
         PRESS_START,
@@ -34,3 +41,4 @@ namespace Fonts{
 
 typedef ResourceHolder<sf::Texture, Textures::ID> TextureHolder;
 typedef ResourceHolder<sf::Font, Fonts::ID> FontHolder;
+typedef ResourceHolder<sf::SoundBuffer , SoundFX::ID> SoundHolder;

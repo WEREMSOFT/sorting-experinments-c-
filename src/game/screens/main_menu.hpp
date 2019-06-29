@@ -64,11 +64,6 @@ struct MainMenu: Screen {
         textureRect.left = textureRect.left + 150 * dt;
         sprite.setTextureRect((sf::IntRect)textureRect);
 
-//        if(!hit.isPlaying()) {
-//            printf("is not playing\n");
-//            hit.play(0);
-//        }
-
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             sf::Vector2i mousePosition = sf::Mouse::getPosition(*context->window);
             float scaleX = (float)SCREEN_WITH / (float)context->window->getSize().x;

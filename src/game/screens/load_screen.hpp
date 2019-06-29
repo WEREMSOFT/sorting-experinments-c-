@@ -36,6 +36,22 @@ namespace LoadScreen {
             lockScopeHandler.unlock();
         };
 
+        std::function<void(SoundFX::ID id, const std::string &filename)> loadSound = [&](SoundFX::ID id,
+                                                                                            const std::string &filename) -> void {
+            lockScopeHandler.lock();
+            resourceConunter++;
+            lockScopeHandler.unlock();
+
+
+            context.soundHolder->load(id, filename);
+            printf("%s loaded\n", filename.c_str());
+            lockScopeHandler.lock();
+            resourceConunter--;
+            lockScopeHandler.unlock();
+
+            sf::SoundBuffer s;
+        };
+
         Struct(Context &context) : context(context) {
 
         }
@@ -77,7 +93,7 @@ namespace LoadScreen {
         }
 
         void loadResources(LoadScreen::Struct &loadScreen) {
-            loadScreen.threads.reserve(Textures::TEXTURE_COUNT);
+            loadScreen.threads.reserve(Textures::TEXTURE_COUNT + SoundFX::SOUND_COUNT);
 
             LoadScreen::utils::showIndicators(loadScreen);
 
@@ -114,6 +130,9 @@ namespace LoadScreen {
             loadScreen.threads.emplace_back(loadScreen.loadTexture, Textures::VFX_YELLOW_HIT,
                                             "../assets/images/vfx/hit-yellow.png");
 
+            loadScreen.threads.emplace_back(loadScreen.loadSound, SoundFX::TYPEWRITER,
+                                            "../assets/soundFX/wkey.wav");
+
             std::cout << "...assets loaded" << std::endl;
         }
 
@@ -140,7 +159,7 @@ namespace LoadScreen {
                 loadScreen.percentajeLoaded =
                         (float) loadScreen.resourceConunter / (float) Textures::TEXTURE_COUNT * 100.0f;
             } else {
-                for (int i = 0; i < Textures::TEXTURE_COUNT; i++) {
+                for (int i = 0; i < Textures::TEXTURE_COUNT + SoundFX::SOUND_COUNT; i++) {
                     if (loadScreen.threads[i].joinable())
                         loadScreen.threads[i].join();
                 }

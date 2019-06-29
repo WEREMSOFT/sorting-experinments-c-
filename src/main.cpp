@@ -6,6 +6,7 @@ int main() {
     sf::Clock clock;
     TextureHolder textureHolder;
     FontHolder fontHolder;
+    SoundHolder soundHolder;
     sf::View view;
     FPSCounter::Struct fpsCounter;
 
@@ -17,7 +18,7 @@ int main() {
 
 
     // Set the initial screen
-    Context context(window, textureHolder, fontHolder, MAIN_MENU);
+    Context context(window, textureHolder, fontHolder, soundHolder, MAIN_MENU);
 
     context.screenSize.x = SCREEN_WITH;
     context.screenSize.y = SCREEN_HEIGHT;

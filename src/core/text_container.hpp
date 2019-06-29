@@ -29,6 +29,7 @@ struct TextContainer : GameObject {
 };
 
 struct TextContainerProgressive : GameObject {
+    sf::Sound soundTypeWriter;
     sf::Text text;
     std::string textString;
     float accumulatedElapsedTime = 0;
@@ -42,6 +43,8 @@ struct TextContainerProgressive : GameObject {
         text.setOutlineThickness(5);
         text.setCharacterSize(charSize);
         text.setLineSpacing(1.5);
+
+        soundTypeWriter.setBuffer(context.soundHolder->get(SoundFX::TYPEWRITER));
 
         if (centered) {
             text_center_origin(text);
@@ -59,6 +62,11 @@ struct TextContainerProgressive : GameObject {
             text_center_origin(text);
             if (charCounter < textString.size()) {
                 charCounter++;
+                if(soundTypeWriter.getStatus() == sf::Sound::Status::Stopped){
+                    if(textString[charCounter] != ' '){
+                        soundTypeWriter.play();
+                    }
+                }
             }
             accumulatedElapsedTime = 0;
         }
