@@ -13,6 +13,7 @@
 #include "game/screens/screen.hpp"
 #include "core/menu.hpp"
 
+#include "game/vfx/yellow_hit.hpp"
 #include "game/screens/load_screen.hpp"
 #include "game/screens/main_menu.hpp"
 #include "game/screens/town.hpp"

@@ -29,8 +29,6 @@ int main() {
     context = load_screen(context);
 
 
-
-
     MainMenu mainMenu(context);
     Town town(context);
     Dialog dialog(context);
@@ -45,7 +43,6 @@ int main() {
 
     sf::Event event;
     float dt = 0;
-    bool fullscreen = false;
     while(window.isOpen()){
         dt = clock.restart().asSeconds();
 
@@ -55,8 +52,8 @@ int main() {
             }
 
             if ((event.type == sf::Event::KeyPressed) && (event.key.code == keys::F)) {
-                fullscreen = !fullscreen;
-                window.create(sf::VideoMode(SCREEN_WITH, SCREEN_HEIGHT), "Purflactlt Safe", (fullscreen ? sf::Style::Fullscreen : sf::Style::Default));
+                context.fullscreen = !context.fullscreen;
+                window.create(sf::VideoMode(SCREEN_WITH, SCREEN_HEIGHT), "Purflactlt Safe", (context.fullscreen ? sf::Style::Fullscreen : sf::Style::Default));
                 window.setView(view);
                 window.setFramerateLimit(60);
             }

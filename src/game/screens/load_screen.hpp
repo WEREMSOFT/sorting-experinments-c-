@@ -111,7 +111,8 @@ namespace LoadScreen {
                                             "../assets/images/characters/panda.png");
             loadScreen.threads.emplace_back(loadScreen.loadTexture, Textures::AGRETSUKO,
                                             "../assets/images/characters/agretsuko.png");
-
+            loadScreen.threads.emplace_back(loadScreen.loadTexture, Textures::VFX_YELLOW_HIT,
+                                            "../assets/images/vfx/hit-yellow.png");
 
             std::cout << "...assets loaded" << std::endl;
         }

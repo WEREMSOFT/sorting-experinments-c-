@@ -10,6 +10,7 @@ struct Context {
     FontHolder *fontHolder;
     int currentGameScreen;
     sf::Vector2f screenSize;
+    bool fullscreen = false;
 
     Context(sf::RenderWindow &pWindow,
             TextureHolder &pTextureHolder,

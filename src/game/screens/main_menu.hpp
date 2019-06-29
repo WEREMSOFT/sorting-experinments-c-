@@ -9,6 +9,7 @@ struct MainMenu: Screen {
     GameObject pandaLeft;
     GameObject pandaRight;
     TextContainer gameName;
+    YellowHit hit;
     Menu menu;
 
     MainMenu(Context& context): Screen(context.textureHolder->get(Textures::TITLE_BACKGROUND_TILE), context), gameName(context, "Game Name"), menu(context, *this) {
@@ -22,6 +23,10 @@ struct MainMenu: Screen {
 
         textureRect.height = context.screenSize.y;
         textureRect.width = context.screenSize.x;
+
+        hit.sprite.setTexture(context.textureHolder->get(Textures::VFX_YELLOW_HIT));
+        hit.sprite.setScale(.75, .75);
+        hit.sprite.move(100, 100);
 
         pandaRight.sprite.setTexture(context.textureHolder->get(Textures::PANDA));
         pandaLeft.sprite.setTexture(context.textureHolder->get(Textures::PANDA));
@@ -50,6 +55,7 @@ struct MainMenu: Screen {
         menu.callback = onMenuItemSelected;
 
         layers[LAYER_MIDDLE].addChild(&menu);
+        layers[LAYER_MIDDLE].addChild(&hit);
     }
 
     void update(float dt) override {
@@ -57,6 +63,20 @@ struct MainMenu: Screen {
         textureRect.top = textureRect.top + 100 * dt;
         textureRect.left = textureRect.left + 150 * dt;
         sprite.setTextureRect((sf::IntRect)textureRect);
+
+//        if(!hit.isPlaying()) {
+//            printf("is not playing\n");
+//            hit.play(0);
+//        }
+
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            sf::Vector2i mousePosition = sf::Mouse::getPosition(*context->window);
+            float scaleX = (float)SCREEN_WITH / (float)context->window->getSize().x;
+            float scaleY = (float)SCREEN_HEIGHT / (float)context->window->getSize().y;
+            hit.sprite.setPosition(scaleX * mousePosition.x, scaleY * mousePosition.y);
+            hit.play(YellowHit::BLIN);
+        }
+
     }
 
     static void onMenuItemSelected(Screen& screen, int itemSelected) {

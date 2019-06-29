@@ -20,6 +20,7 @@ namespace Textures{
         HENCHMAN,
         PANDA,
         AGRETSUKO,
+        VFX_YELLOW_HIT,
         TEXTURE_COUNT
     };
 }
